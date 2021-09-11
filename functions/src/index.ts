@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
-import * as callables from './callables';
+import * as callables from "./callables";
 
 export const db = admin.firestore();
 export const FieldValue = admin.firestore.FieldValue;

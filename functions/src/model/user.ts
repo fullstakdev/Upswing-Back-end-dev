@@ -1,50 +1,55 @@
 
-
-
 interface GBUserLocation {
     geohash?: string;
     lat: number;
     lng: number;
 }
 
+/**
+ * user model.
+ */
 export class GBUserModel {
-    uid: string;    
-    firstname: string;
-    lastname: string;
-    gender: string;
-    birthday: string;
-    email: string;
-    phone: string;
-    photo?: string;
-    location: GBUserLocation;
-    userType: Number;
-    
-    googleId?: string;
-    appleId?: string;
-    facebookId?: string;    
-    fcmToken?: string;
+  uid: string;
+  firstname: string;
+  lastname: string;
+  gender: string;
+  birthday: string;
+  email: string;
+  phone: string;
+  photo?: string;
+  location: GBUserLocation;
+  userType: number;
 
-    createAt: Date;
-    updateAt: Date;
+  googleId?: string;
+  appleId?: string;
+  facebookId?: string;
+  fcmToken?: string;
 
-    constructor(uid: string, data: any) {
-        this.uid = uid;
-        this.firstname = data.firstname;
-        this.lastname = data.lastname;
-        this.gender = data.gender;
-        this.birthday = data.birthday;
-        this.email = data.email;
-        this.phone = data.phone;
-        this.photo = data.photo;
-        this.location = data.location;
-        this.userType = data.userType;
+  createAt: Date;
+  updateAt: Date;
 
-        this.googleId = data.googleId;
-        this.appleId = data.appleId;
-        this.facebookId = data.facebookId;    
-        this.fcmToken = data.fcmToken;
+  /**
+  * @param {string} uid first parameter.
+  * @param {any} data second parameter.
+  */
+  constructor(uid: string, data: any) {
+    this.uid = uid;
+    this.firstname = data.firstname;
+    this.lastname = data.lastname;
+    this.gender = data.gender;
+    this.birthday = data.birthday;
+    this.email = data.email;
+    this.phone = data.phone;
+    this.photo = data.photo;
+    this.location = data.location;
+    this.userType = data.userType;
 
-        this.createAt = new Date(data.createAt);
-        this.updateAt = new Date(data.updateAt);
-    }
+    this.googleId = data.googleId;
+    this.appleId = data.appleId;
+    this.facebookId = data.facebookId;
+    this.fcmToken = data.fcmToken;
+
+    this.createAt = new Date(data.createAt);
+    this.updateAt = new Date(data.updateAt);
+  }
 }

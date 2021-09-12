@@ -1,64 +1,89 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import bodyParser = require("body-parser");
 import {db, FieldValue, FieldPath} from ".";
 import {COLLECTION_WORKOUT} from "./utils/constant";
-
+import {GBResponseModel} from "./model/response";
 // interface GBWorkoutParams {
 //     workoutName: string;
 //     status: Number;
 // }
 
-export const createWorkout = functions.https.onRequest( async (req, res) => {
-  const params = bodyParser.json(req.body);
+export const createWorkout = async (req: any, res: any) => {
+  const params = req.body.data;
+  const result = {success: false, payload: {}, error: {}};
   try {
     const writeResult =
-      await admin.firestore().collection(COLLECTION_WORKOUT).add(params);
-    console.log(writeResult);
+      await db.collection(COLLECTION_WORKOUT).add(params);
     if (writeResult.id) {
-      res.status(200).json({status: 200, result: {result: "success"}});
+      result["success"] = true;
+      result["payload"] = { "message": "success"};
+      res.status(200).json(new GBResponseModel(result));
     } else {
-      res.status(500).json({status: 200, result: {result: "success"}});
+      result["success"] = false;
+      res.status(400).json(new GBResponseModel(result));
     }
   } catch (err) {
-    console.error(JSON.stringify(err));
-    throw new functions.https.HttpsError("internal", JSON.stringify(err));
+    result["error"] = JSON.stringify(err);
+    result["success"] = false;
+    res.status(500).json(new GBResponseModel(result));
   }
-});
+};
 
-export const updateWorkout = functions.https.onRequest( async (req, res) => {
+export const updateWorkout = async (req: any, res: any) => {
+  const workoutId = req.body.workoutId;
+  const updateData = req.body.data;
+  const result = {success: false, payload: {}, error: {}};
   try {
-    res.status(200).json({status: 200, result: "update success"});
-  } catch (err) {
-    console.error(JSON.stringify(err));
-    throw new functions.https.HttpsError("internal", JSON.stringify(err));
-  }
-});
+    const snapWorkout = db.collection(COLLECTION_WORKOUT).doc(workoutId);
 
-export const deleteWorkout = functions.https.onRequest( async (req, res) => {
+    await snapWorkout.set(updateData).catch( (err) => {
+      result["success"] = false;
+      result["error"] = JSON.stringify(err);
+      res.status(200).json(new GBResponseModel(result));
+    });
+
+    result["success"] = true;
+    result["payload"] = {"message": "success"};
+    res.status(400).json(new GBResponseModel(result));
+  } catch (err) {
+    result["error"] = JSON.stringify(err);
+    result["success"] = false;
+    res.status(500).json(new GBResponseModel(result));
+  }
+};
+
+export const deleteWorkout = async (req: any, res: any) => {
+  const workoutId = req.body.workoutId;
+  const result = {success: false, payload: {}, error: {}};
   try {
-    res.status(200).json({status: 200, result: "delete success"});
+    const snapWorkout = db.collection(COLLECTION_WORKOUT).doc(workoutId);
+    await snapWorkout.delete().catch( (err) => {
+      result["success"] = false;
+      result["error"] = JSON.stringify(err);
+      res.status(200).json(new GBResponseModel(result));
+    });
+    result["success"] = true;
+    result["payload"] = {"message": "success"};
+    res.status(400).json(new GBResponseModel(result));
   } catch (err) {
-    console.error(JSON.stringify(err));
-    throw new functions.https.HttpsError("internal", JSON.stringify(err));
+    result["error"] = JSON.stringify(err);
+    result["success"] = false;
+    res.status(500).json(new GBResponseModel(result));
   }
-});
+};
 
-export const getWorkouts = functions.https.onRequest( async (req, res) => {
+export const getWorkouts = async (req: any, res: any) => {
   console.log(db, FieldValue, FieldPath);
-  const collectionId =req.body.collectionId;
+  const result = {success: false, payload: {}, error: {}};
   try {
-    const workouts = await db
-        .collection(COLLECTION_WORKOUT)
-        .where("collectionId", "==", collectionId)
-        .get();
-    if (workouts.empty) {
-      // return [];
-      res.status(200).json({status: 200, result: {result: "empty"}});
-    }
-    res.status(200).json({status: 200, result: {result: "get success"}});
+    const allSnaps = await db.collection(COLLECTION_WORKOUT).get();
+    const allWorkouts: any = [];
+    allSnaps.forEach((doc: any) => allWorkouts.push(doc.data()));
+
+    result["success"] = true;
+    result["payload"] = allWorkouts;
+    res.status(200).json(new GBResponseModel(result));
   } catch (err) {
-    console.error(JSON.stringify(err));
-    throw new functions.https.HttpsError("internal", JSON.stringify(err));
+    result["success"] = false;
+    result["error"] = JSON.stringify(err);
+    res.status(500).json(new GBResponseModel(result));
   }
-});
+};

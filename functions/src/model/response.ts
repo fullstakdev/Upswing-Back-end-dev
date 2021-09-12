@@ -8,8 +8,8 @@ interface GBErrorModel {
  * response model.
  */
 export class GBResponseModel {
-  success: string;
-  payload: Record<string, unknown>;
+  success: boolean;
+  payload: Record<string, unknown>[];
   error?: GBErrorModel;
   timestamp: number;
 
@@ -20,6 +20,6 @@ export class GBResponseModel {
     this.success = data.success;
     this.payload = data.payload;
     this.error = data.error;
-    this.timestamp = data.timestamp;
+    this.timestamp = new Date().getTime();
   }
 }

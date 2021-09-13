@@ -9,6 +9,7 @@ export const onCreateWorkout = functions
     .onCreate( async (snap, context) => {
       try {
         console.log("create result:", snap, context);
+        return "ok";
       } catch (err) {
         console.log(JSON.stringify(err));
         throw new HttpsError("internal", JSON.stringify(err));

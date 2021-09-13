@@ -25,8 +25,8 @@ export class GBUserModel {
   facebookId?: string;
   fcmToken?: string;
 
-  createAt: Date;
-  updateAt: Date;
+  createAt: number;
+  updateAt?: number;
 
   /**
   * @param {string} uid first parameter.
@@ -49,7 +49,7 @@ export class GBUserModel {
     this.facebookId = data.facebookId;
     this.fcmToken = data.fcmToken;
 
-    this.createAt = new Date(data.createAt);
-    this.updateAt = new Date(data.updateAt);
+    this.createAt = new Date(data.createAt).getTime();
+    this.updateAt = new Date(data.updateAt).getTime();
   }
 }

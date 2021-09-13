@@ -1,5 +1,5 @@
 import {db, FieldValue, FieldPath} from ".";
-import {COLLECTION_WORKOUT} from "./utils/constant";
+import {COLLECTION_USER, COLLECTION_WORKOUT} from "./utils/constant";
 import {GBResponseModel} from "./model/response";
 // interface GBWorkoutParams {
 //     workoutName: string;
@@ -72,11 +72,16 @@ export const deleteWorkout = async (req: any, res: any) => {
 
 export const getWorkouts = async (req: any, res: any) => {
   console.log(db, FieldValue, FieldPath);
+  // const searchData = req.body.data;
   const result = {success: false, payload: {}, error: {}};
   try {
     const allSnaps = await db.collection(COLLECTION_WORKOUT).get();
     const allWorkouts: any = [];
-    allSnaps.forEach((doc: any) => allWorkouts.push(doc.data()));
+    allSnaps.forEach((doc: any) => {
+      console.log("doc datas: ");
+      console.log(doc.data());
+      allWorkouts.push(doc.data());
+    });
 
     result["success"] = true;
     result["payload"] = allWorkouts;
@@ -87,3 +92,74 @@ export const getWorkouts = async (req: any, res: any) => {
     res.status(500).json(new GBResponseModel(result));
   }
 };
+
+export const createUser = async (req: any, res: any) => {
+  console.log("Create User: ", req.body.data);
+  const params = req.body.data;
+  const result = {success: false, payload: {}, error: {}};
+  try {
+    const writeResult =
+      await db.collection(COLLECTION_USER).add(params);
+    if (writeResult.id) {
+      result["success"] = true;
+      result["payload"] = { "message": "success"};
+      res.status(200).json(new GBResponseModel(result));
+    } else {
+      result["success"] = false;
+      res.status(400).json(new GBResponseModel(result));
+    }
+  } catch (err) {
+    result["error"] = JSON.stringify(err);
+    result["success"] = false;
+    res.status(500).json(new GBResponseModel(result));
+  }
+}
+
+export const updateUser = async (req: any, res: any) => {
+  const userId = req.body.userId;
+  const updateData = req.body.data;
+  const result = {success: false, payload: {}, error: {}};
+  try {
+    const snapUser = db.collection(COLLECTION_USER).doc(userId);
+
+    await snapUser.set(updateData).catch( (err) => {
+      result["success"] = false;
+      result["error"] = JSON.stringify(err);
+      res.status(200).json(new GBResponseModel(result));
+    });
+
+    result["success"] = true;
+    result["payload"] = {"message": "success"};
+    res.status(400).json(new GBResponseModel(result));
+  } catch (err) {
+    result["error"] = JSON.stringify(err);
+    result["success"] = false;
+    res.status(500).json(new GBResponseModel(result));
+  }
+}
+
+export const deleteUser = async (req: any, res: any) => {
+  const userId = req.body.userId;
+  const result = {success: false, payload: {}, error: {}};
+  try {
+    const snapUser = db.collection(COLLECTION_USER).doc(userId);
+    await snapUser.delete().catch( (err) => {
+      result["success"] = false;
+      result["error"] = JSON.stringify(err);
+      res.status(200).json(new GBResponseModel(result));
+    });
+    result["success"] = true;
+    result["payload"] = {"message": "success"};
+    res.status(400).json(new GBResponseModel(result));
+  } catch (err) {
+    result["error"] = JSON.stringify(err);
+    result["success"] = false;
+    res.status(500).json(new GBResponseModel(result));
+  }
+}
+
+export const searchUsers = async (req: any, res: any) => {
+  console.log('searched User: ', req.body.data);
+
+  res.status(200).json({result: "searched User object array"});
+}

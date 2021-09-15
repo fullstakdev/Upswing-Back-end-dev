@@ -1,4 +1,5 @@
-import {db, FieldValue, FieldPath} from ".";
+import {db} from ".";
+// import {db, FieldValue, FieldPath} from ".";
 import {COLLECTION_USER, COLLECTION_WORKOUT} from "./utils/constant";
 import {GBResponseModel} from "./model/response";
 // interface GBWorkoutParams {
@@ -9,20 +10,25 @@ import {GBResponseModel} from "./model/response";
 export const createWorkout = async (req: any, res: any) => {
   const params = req.body.data;
   const result = {success: false, payload: {}, error: {}};
+  params["rating"] = 0;
+  params["difficulty"] = 0;
   try {
     const writeResult =
       await db.collection(COLLECTION_WORKOUT).add(params);
     if (writeResult.id) {
       result["success"] = true;
-      result["payload"] = { "message": "success"};
+      params["workoutId"] = writeResult.id;
+      result["payload"] = {docs: params};
       res.status(200).json(new GBResponseModel(result));
     } else {
       result["success"] = false;
+      result["payload"] = {docs: params};
       res.status(400).json(new GBResponseModel(result));
     }
   } catch (err) {
     result["error"] = JSON.stringify(err);
     result["success"] = false;
+    result["payload"] = {docs: params};
     res.status(500).json(new GBResponseModel(result));
   }
 };
@@ -41,7 +47,9 @@ export const updateWorkout = async (req: any, res: any) => {
     });
 
     result["success"] = true;
-    result["payload"] = {"message": "success"};
+    let updatedWorkout = updateData;
+    updatedWorkout["workoutId"] = workoutId;
+    result["payload"] = {"docs": updatedWorkout};
     res.status(400).json(new GBResponseModel(result));
   } catch (err) {
     result["error"] = JSON.stringify(err);
@@ -70,21 +78,52 @@ export const deleteWorkout = async (req: any, res: any) => {
   }
 };
 
+export const getWorkout = async (req: any, res: any) => {  
+  const workoutId = req.params.workoutId;
+  const result = {success: false, payload: {}, error: {}};
+  try {
+    const workout = await (await db.collection(COLLECTION_WORKOUT).doc(workoutId).get()).data();
+    result["success"] = true;
+    result["payload"] = {docs: workout};
+    res.status(200).json(new GBResponseModel(result));
+  } catch (err) {
+    result["success"] = false;
+    result["error"] = JSON.stringify(err);
+    res.status(500).json(new GBResponseModel(result));
+  }
+};
+
 export const getWorkouts = async (req: any, res: any) => {
-  console.log(db, FieldValue, FieldPath);
-  // const searchData = req.body.data;
+  const searchData = req.body.data;
+  console.log(searchData);
   const result = {success: false, payload: {}, error: {}};
   try {
     const allSnaps = await db.collection(COLLECTION_WORKOUT).get();
     const allWorkouts: any = [];
+    // allSnaps.forEach((doc: any) => {
+    //   // console.log("doc datas: ");
+    //   // console.log(doc.data());
+    //   allWorkouts.push(doc.data());
+    // });
+    let row = 0;
     allSnaps.forEach((doc: any) => {
-      console.log("doc datas: ");
-      console.log(doc.data());
-      allWorkouts.push(doc.data());
+      let workout = doc.data();
+      workout["workoutId"] = doc.id;
+      allWorkouts.push(workout);
+      row++;
     });
-
     result["success"] = true;
-    result["payload"] = allWorkouts;
+    result["payload"] = {
+      docs: allWorkouts,
+      limit: 10,
+      page: 1,
+      totalPages: 1,
+      totalDocs: row,
+      hasPrevPage: false,
+      hasNextPage: false,
+      prevPage: 0,
+      nextPage: 0
+  };
     res.status(200).json(new GBResponseModel(result));
   } catch (err) {
     result["success"] = false;
@@ -102,7 +141,7 @@ export const createUser = async (req: any, res: any) => {
       await db.collection(COLLECTION_USER).add(params);
     if (writeResult.id) {
       result["success"] = true;
-      result["payload"] = { "message": "success"};
+      result["payload"] = {data: params};
       res.status(200).json(new GBResponseModel(result));
     } else {
       result["success"] = false;
@@ -113,7 +152,7 @@ export const createUser = async (req: any, res: any) => {
     result["success"] = false;
     res.status(500).json(new GBResponseModel(result));
   }
-}
+};
 
 export const updateUser = async (req: any, res: any) => {
   const userId = req.body.userId;
@@ -136,7 +175,7 @@ export const updateUser = async (req: any, res: any) => {
     result["success"] = false;
     res.status(500).json(new GBResponseModel(result));
   }
-}
+};
 
 export const deleteUser = async (req: any, res: any) => {
   const userId = req.body.userId;
@@ -156,10 +195,9 @@ export const deleteUser = async (req: any, res: any) => {
     result["success"] = false;
     res.status(500).json(new GBResponseModel(result));
   }
-}
+};
 
 export const searchUsers = async (req: any, res: any) => {
-  console.log('searched User: ', req.body.data);
-
+  console.log("searched User: ", req.body.data);
   res.status(200).json({result: "searched User object array"});
-}
+};

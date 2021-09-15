@@ -14,12 +14,13 @@
   },
   "emulators": {
     "functions" : {
-      "host": "localhost",
-      "port": "5001"
+      "port": 5001
     },
     "firestore": {
-      "host": "localhost",
-      "port": "8000"
-    }    
+      "port": 8000
+    },
+    "storage": {
+      "port": 9199
+    }
   }
 }

@@ -5,9 +5,17 @@ export enum GBWorkoutStatus {
     progressive = 2,
 }
 
+export enum GBWorkoutType {
+    vod = 1,
+    planned = 2,
+    livestream = 3,
+    video_connect = 4,
+    in_person = 5
+}
+
 export enum GBUserType {
-    member = 1,
-    trainer = 2,
+    member = "member",
+    trainer = "trainer",
 }
 
 export enum GBLocationForProgram {
@@ -19,7 +27,7 @@ export enum GBLocationForProgram {
 export enum GBProgramLevel {
     beginner = 1,
     intermediate = 2,
-    advanced =  3
+    advanced = 3
 }
 
 export enum GBProgramFormat {

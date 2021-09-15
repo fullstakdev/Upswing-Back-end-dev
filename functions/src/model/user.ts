@@ -5,6 +5,16 @@ interface GBUserLocation {
     lng: number;
 }
 
+interface GBUserArchive {
+  currentStreak: number;
+  longestStreak: number;
+  programCompleted: number;
+}
+
+interface GBUserGoals {
+  goal: string;
+  archive: string;
+}
 /**
  * user model.
  */
@@ -19,11 +29,12 @@ export class GBUserModel {
   photo?: string;
   location: GBUserLocation;
   userType: number;
+  goal: GBUserGoals[];
+  archive: GBUserArchive;
 
   googleId?: string;
   appleId?: string;
   facebookId?: string;
-  fcmToken?: string;
 
   createAt: number;
   updateAt?: number;
@@ -47,7 +58,9 @@ export class GBUserModel {
     this.googleId = data.googleId;
     this.appleId = data.appleId;
     this.facebookId = data.facebookId;
-    this.fcmToken = data.fcmToken;
+
+    this.goal = data.goal;
+    this.archive = data.archive;
 
     this.createAt = new Date(data.createAt).getTime();
     this.updateAt = new Date(data.updateAt).getTime();

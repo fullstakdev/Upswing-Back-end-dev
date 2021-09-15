@@ -25,6 +25,7 @@ app.post("/workouts", callables.getWorkouts);
 app.post("/user", callables.createUser);
 app.put("/user", callables.updateUser);
 app.delete("/user", callables.deleteUser);
+app.get("/users/:userId", callables.getUserInformation);
 app.post("/users", callables.searchUsers);
 
 exports.onCreateWorkout = triggers.onCreateWorkout;

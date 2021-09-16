@@ -15,7 +15,7 @@ const app = express();
  */
 app.post("/workout", callables.createWorkout);
 app.put("/workout", callables.updateWorkout);
-app.delete("/workout", callables.deleteWorkout);
+app.delete("/workout/:workoutId", callables.deleteWorkout);
 app.get("/workouts/:workoutId", callables.getWorkout);
 app.post("/workouts", callables.getWorkouts);
 
@@ -24,9 +24,21 @@ app.post("/workouts", callables.getWorkouts);
  */
 app.post("/user", callables.createUser);
 app.put("/user", callables.updateUser);
-app.delete("/user", callables.deleteUser);
-app.get("/users/:userId", callables.getUserInformation);
-app.post("/users", callables.searchUsers);
+app.delete("/user/:userId", callables.deleteUser);
+app.get("/users/:userId", callables.getUser);
+app.post("/users", callables.getUsers);
+
+app.post("/exercise", callables.createExercise);
+app.put("/exercise", callables.updateExercise);
+app.delete("/exercise/:exerciseId", callables.deleteExercise);
+app.get("/exercises/:exerciseId", callables.getExercise);
+app.post("/exercises", callables.getExercises);
+
+
+/**
+ * fileupload
+ */
+app.post("/file", callables.uploadFiles);
 
 exports.onCreateWorkout = triggers.onCreateWorkout;
 exports.api = functions.https.onRequest(app);

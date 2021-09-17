@@ -1,4 +1,4 @@
-import { IUserRoleType } from '../interfaces/user';
+import { IUserRoleType } from "../interfaces/user";
 
 export const COLLECTION_WORKOUT = "workout";
 export const COLLECTION_USER = "user";

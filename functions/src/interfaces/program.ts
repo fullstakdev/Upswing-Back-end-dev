@@ -26,21 +26,21 @@ export enum IProgramType {
 }
 
 export enum IProgramFormat {
-    OWN_PLACE = 'own_place',
-    GUIDED_GROUP = 'guided_group',
-    ONE_ONE = 'one_one'
+    OWN_PLACE = "own_place",
+    GUIDED_GROUP = "guided_group",
+    ONE_ONE = "one_one"
 }
 
 export enum IProgramLevel {
-    BEGINNER = 'beginner',
-    INTERMEDIATE = 'intermediate',
-    ADVANCED = 'advanced'
+    BEGINNER = "beginner",
+    INTERMEDIATE = "intermediate",
+    ADVANCED = "advanced"
 }
 
 export enum IProgramLocationType {
-    HOME = 'home',
-    HOME_GYM = 'home_gym',
-    GYM = 'gym'
+    HOME = "home",
+    HOME_GYM = "home_gym",
+    GYM = "gym"
 }
 
 export interface IProgram {

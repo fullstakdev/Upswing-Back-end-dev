@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import {Request, Response} from "express";
 import {db} from "../.";
 // import {db, FieldValue, FieldPath} from ".";
 import {COLLECTION_WORKOUT} from "../utils/constants";

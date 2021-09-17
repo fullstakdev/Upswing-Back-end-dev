@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import * as status from 'statuses';
-import { validationResult } from 'express-validator';
-import { IErrorObject, IResponseObject } from '../interfaces/common';
+import { Request, Response, NextFunction } from "express";
+import * as status from "statuses";
+import { validationResult } from "express-validator";
+import { IErrorObject, IResponseObject } from "../interfaces/common";
 
 export const buildErrObject = (code: number, message: any): IErrorObject => {
     return {

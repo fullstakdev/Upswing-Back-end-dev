@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 // import * as admin from "firebase-admin";
-import {COLLECTION_USER} from "../utils/constant";
+import {COLLECTION_USER} from "../utils/constants";
 import {HttpsError} from "firebase-functions/v1/https";
 
 export const onCreateUser = functions

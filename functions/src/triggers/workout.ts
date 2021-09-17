@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 // import * as admin from "firebase-admin";
-import {COLLECTION_WORKOUT} from "../utils/constant";
+import {COLLECTION_WORKOUT} from "../utils/constants";
 import {HttpsError} from "firebase-functions/v1/https";
 
 export const onCreateWorkout = functions

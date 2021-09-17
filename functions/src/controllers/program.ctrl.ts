@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { matchedData } from 'express-validator';
-import { handleError, handleSuccess } from '../utils';
+import { Request, Response } from "express";
+import { matchedData } from "express-validator";
+import { handleError, handleSuccess } from "../utils";
 
 export const getPrograms = (req: Request, res: Response) => {
     try {

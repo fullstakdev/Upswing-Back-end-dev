@@ -11,5 +11,5 @@
   "compileOnSave": true,
   "include": [
     "src/v2"
-  ]
+, "src/utils/index.ts", "src/utils/constants.ts", "src/validators", "src/services", "src/repositories", "src/routes", "src/middleware", "src/interfaces", "src/controllers"  ]
 }

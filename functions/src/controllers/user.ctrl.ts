@@ -1,9 +1,9 @@
-import {Request, Response} from "express";
-import {db} from "../.";
+import { Request, Response } from "express";
+import { db } from "../.";
 // import {db, FieldValue, FieldPath} from ".";
-import {COLLECTION_USER} from "../utils/constants";
-import {GBResponseModel} from "../model/response";
-import {createData, updateData, deleteDataById, getDataById} from "../repositories/curd.repo";
+import { COLLECTION_USER } from "../utils/constants";
+import { IResponseObject } from "../interfaces/common";
+import { createData, updateData, deleteDataById, getDataById } from "../repositories/curd.repo";
 
 export const createUser = async (req: Request, res: Response) => {
   const params = req.body.data;
@@ -49,18 +49,13 @@ export const getUser = async (req: Request, res: Response) => {
 export const getUsers = async (req: Request, res: Response) => {
   const searchData = req.body.data;
   console.log(searchData);
-  const result = {success: false, payload: {}, error: {}};
+  const result = { success: false, payload: {}, error: {} };
   try {
     const allSnaps = await db.collection(COLLECTION_USER).get();
     const allUsers: any = [];
-    allSnaps.forEach((doc: any) => {
-      let snap = doc.data();      
-      console.log("snap data: ", snap);
-      allUsers.push(doc.data());
-    });
     let row = 0;
     allSnaps.forEach((doc: any) => {
-      let user = doc.data();
+      const user = doc.data();
       user["userId"] = doc.id;
       allUsers.push(user);
       row++;
@@ -75,12 +70,12 @@ export const getUsers = async (req: Request, res: Response) => {
       hasPrevPage: false,
       hasNextPage: false,
       prevPage: 0,
-      nextPage: 0
-  };
-    res.status(200).json(new GBResponseModel(result));
+      nextPage: 0,
+    };
+    res.status(200).json(new IResponseObject(result));
   } catch (err) {
     result["success"] = false;
     result["error"] = JSON.stringify(err);
-    res.status(500).json(new GBResponseModel(result));
+    res.status(500).json(new IResponseObject(result));
   }
 };

@@ -1,10 +1,10 @@
 import * as functions from "firebase-functions";
 // import * as admin from "firebase-admin";
-import {COLLECTION_WORKOUT} from "../utils/constants";
-import {HttpsError} from "firebase-functions/v1/https";
+import { COLLECTION_WORKOUT } from "../utils/constants";
+import { HttpsError } from "firebase-functions/v1/https";
 
 export const onCreateWorkout = functions
-    .runWith({timeoutSeconds: 540})
+    .runWith({ timeoutSeconds: 540 })
     .firestore.document(`${COLLECTION_WORKOUT}/{collectionId}`)
     .onCreate( async (snap, context) => {
       try {
@@ -17,7 +17,7 @@ export const onCreateWorkout = functions
     });
 
 export const onUpdateWorkout = functions
-    .runWith({timeoutSeconds: 540})
+    .runWith({ timeoutSeconds: 540 })
     .firestore.document(`${COLLECTION_WORKOUT}/{collectionId}`)
     .onUpdate(async (change, context) => {
       const collectionId = context.params.collectionId;

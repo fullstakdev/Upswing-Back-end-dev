@@ -17,9 +17,16 @@ export interface IErrorObject {
     message: any
 }
 
-export interface IResponseObject {
-    success: boolean,
-    payload?: Record<string, unknown>[],
-    error?: IErrorObject,
-    timestamp: number
+export class IResponseObject {
+    success: boolean;
+    payload?: Record<string, unknown>;
+    error?: IErrorObject;
+    timestamp: number;
+
+    constructor(data: any) {
+        this.success = data.success;
+        this.timestamp = new Date().getTime();
+        this.error = data.error;
+        this.payload = data.payload;
+    }
 }

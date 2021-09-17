@@ -23,7 +23,7 @@ routes.put(
 );
 
 routes.delete(
-    "/",
+    "/:workoutId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getWorkoutValidate,
@@ -31,7 +31,7 @@ routes.delete(
 );
 
 routes.get(
-    "/{workoutId}",
+    "/:workoutId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getWorkoutValidate,

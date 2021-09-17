@@ -1,4 +1,4 @@
-import {IWorkout} from "./workout";
+import { IWorkout } from "./workout";
 
 export enum IScheduleStatusType {
     PENDING = "pending",

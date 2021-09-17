@@ -23,7 +23,7 @@ routes.put(
 );
 
 routes.delete(
-    "/",
+    "/:userId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getUserValidate,
@@ -31,7 +31,7 @@ routes.delete(
 );
 
 routes.get(
-    "/{userId}",
+    "/:userId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getUserValidate,

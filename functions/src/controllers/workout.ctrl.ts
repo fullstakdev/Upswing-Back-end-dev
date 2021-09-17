@@ -1,11 +1,11 @@
-import {Request, Response} from "express";
-import {db} from "../.";
+import { Request, Response } from "express";
+import { db } from "../.";
 // import {db, FieldValue, FieldPath} from ".";
-import {COLLECTION_WORKOUT} from "../utils/constants";
-import {GBResponseModel} from "../model/response";
-import {createData, updateData, deleteDataById, getDataById} from "../repositories/curd.repo";
+import { COLLECTION_WORKOUT } from "../utils/constants";
+import { IResponseObject } from "../interfaces/common";
+import { createData, updateData, deleteDataById, getDataById } from "../repositories/curd.repo";
 
-export const createWorkout = async(req: Request, res: Response) => {
+export const createWorkout = async (req: Request, res: Response) => {
   const params = req.body.data;
   params["rating"] = 0;
   params["difficulty"] = 0;
@@ -26,7 +26,7 @@ export const updateWorkout = async (req: Request, res: Response) => {
   } else {
     res.status(result.error.code).json(result);
   }
-}
+};
 
 export const deleteWorkout = async (req: Request, res: Response) => {
   const workoutId = req.params.workoutId;
@@ -36,7 +36,7 @@ export const deleteWorkout = async (req: Request, res: Response) => {
   } else {
     res.status(result.error.code).json(result);
   }
-}
+};
 
 export const getWorkout = async (req: Request, res: Response) => {
   const workoutId = req.params.workoutId;
@@ -46,12 +46,12 @@ export const getWorkout = async (req: Request, res: Response) => {
   } else {
     res.status(result.error.code).json(result);
   }
-}
+};
 
 export const getWorkouts = async (req: Request, res: Response) => {
   const searchData = req.body.data;
   console.log(searchData);
-  const result = {success: false, payload: {}, error: {}};
+  const result = { success: false, payload: {}, error: {} };
   try {
     const allSnaps = await db.collection(COLLECTION_WORKOUT).get();
     const allWorkouts: any = [];
@@ -62,7 +62,7 @@ export const getWorkouts = async (req: Request, res: Response) => {
     // });
     let row = 0;
     allSnaps.forEach((doc: any) => {
-      let workout = doc.data();
+      const workout = doc.data();
       workout["workoutId"] = doc.id;
       allWorkouts.push(workout);
       row++;
@@ -77,12 +77,12 @@ export const getWorkouts = async (req: Request, res: Response) => {
       hasPrevPage: false,
       hasNextPage: false,
       prevPage: 0,
-      nextPage: 0
-  };
-    res.status(200).json(new GBResponseModel(result));
+      nextPage: 0,
+    };
+    res.status(200).json(new IResponseObject(result));
   } catch (err) {
     result["success"] = false;
     result["error"] = JSON.stringify(err);
-    res.status(500).json(new GBResponseModel(result));
+    res.status(500).json(new IResponseObject(result));
   }
-}
+};

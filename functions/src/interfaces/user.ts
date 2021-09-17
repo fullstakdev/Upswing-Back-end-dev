@@ -33,5 +33,11 @@ export interface IUser {
     location?: IUserLocationType,
     goal?: IUserGoalType[],
     achievement?: IUserAchievementType,
-    programIds?: number[]
+    programIds?: number[];
+    googleId?: string;
+    appleId?: string;
+    facebookId?: string;
+
+    createAt: number;
+    updateAt?: number;
 }

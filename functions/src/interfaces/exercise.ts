@@ -9,12 +9,13 @@ export interface IExercise {
     id?: string;
     trainerId?: string;
     name: string;
-    setsNumber: number;
-    repeatsNumber: number;
-    duration: number;
-    durationUnit: IDurationUnit;
-    recoveryDuration: number;
-    recoveryDurationUnit: IDurationUnit;
+    sets?: number;
+    repeats?: number;
+    duration?: number;
+    durationUnit?: IDurationUnit;
+    recoveryDuration?: number;
+    recoveryDurationUnit?: IDurationUnit;
     videoClipUrl: string;
-    requiredConditions: IRequiredCondition[]
+    requiredWeight: boolean;
+    requiredConditions?: IRequiredCondition;
 }

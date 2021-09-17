@@ -3,7 +3,7 @@ import {db} from "../.";
 // import {db, FieldValue, FieldPath} from ".";
 import {COLLECTION_EXERCISE} from "../utils/constants";
 import {GBResponseModel} from "../model/response";
-import {createData, updateData, deleteDataById, getDataById} from "../repository/curd";
+import {createData, updateData, deleteDataById, getDataById} from "../repositories/curd.repo";
 
 export const createExercise = async(req: Request, res: Response) => {
   const params = req.body.data;

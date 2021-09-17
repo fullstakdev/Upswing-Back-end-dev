@@ -1,4 +1,4 @@
-import { IDurationUnit } from './common';
+import { IDurationUnit } from "./common";
 
 export interface IRequiredCondition {
     weight: number;

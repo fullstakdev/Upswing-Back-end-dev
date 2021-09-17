@@ -1,4 +1,4 @@
-import {db} from "../.";
+import {db} from "..";
 // import {db, FieldValue, FieldPath} from ".";
 
 export const createData = async (collectionName: string, id: string, data: any) => {

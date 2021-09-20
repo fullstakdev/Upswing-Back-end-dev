@@ -1,12 +1,34 @@
-const createUser = () => {};
+import { COLLECTION_USER } from '../utils/constants';
+import { db } from '../services/firestore';
 
-const updateUser = () => {};
+const createUser = async (user: any) => {
+    return await db.collection(COLLECTION_USER).add(user);
+};
 
-const getUsers = () => {};
+const updateUser = async (data: any, userId: string) => {
+    const snapData = db.collection(COLLECTION_USER).doc(userId);
+    await snapData.set(data).catch((err) => {
+        return err;
+    });
+    return true;
+};
 
-const getUser = () => {};
+const getUsers = async () => {
+    return await db.collection(COLLECTION_USER).get();
+};
 
-const deleteUser = () => {};
+const getUser = async (userId: string) => {
+    return await ( await db.collection(COLLECTION_USER).doc(userId).get()).data();
+};
+
+const deleteUser = async (userId: string) => {
+    const snapData = db.collection(COLLECTION_USER).doc(userId);
+    const user = (await(snapData.get())).data();
+    await snapData.delete().catch((err) => {
+        return err;
+    });
+    return user;
+};
 
 export default {
     createUser,

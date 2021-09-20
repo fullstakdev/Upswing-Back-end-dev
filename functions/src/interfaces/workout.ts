@@ -32,8 +32,8 @@ export interface IInPersonType {
 }
 
 export interface IWorkout {
-    workoutId?: string;
-    workoutName: string;
+    id?: string;
+    name: string;
     trainerId: string;
     type: string;
     rating?: number;

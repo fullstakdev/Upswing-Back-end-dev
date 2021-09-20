@@ -1,8 +1,8 @@
 import { Router } from "express";
 // import authMiddleware from "../../middleware/auth";
 // import roleMiddleware from "../../middleware/role";
-import * as controller from "../../controllers/program.ctrl";
-import * as validator from "../../validators/program.validator";
+import * as controller from "../../controllers/goal.ctrl";
+import * as validator from "../../validators/goal.validator";
 // import { IUserRoleType } from "../../interfaces/user";
 
 const routes = Router();
@@ -11,47 +11,39 @@ routes.post(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    controller.createProgram
+    controller.createGoal
 );
 
 routes.put(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgram,
-    controller.updateProgram
+    // validator.getGoalValidate,
+    controller.updateGoal
 );
 
 routes.delete(
-    "/:programId",
+    "/:memberId/:goalId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgram,
-    controller.deleteProgram
+    validator.getGoal,
+    controller.deleteGoal
 );
 
 routes.get(
-    "/:programId",
+    "/:memberId/:goalId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getProgram,
-    controller.getProgram
+    validator.getGoal,
+    controller.getGoal
 );
 
 routes.get(
-    "/",
+    "/:memberId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgram,
-    controller.getAllPrograms
-);
-
-routes.post(
-    "/search",
-    // authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgramValidate,
-    controller.searchPrograms
+    // validator.getGoal,
+    controller.getAllGoals
 );
 
 export default routes;

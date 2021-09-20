@@ -1,8 +1,7 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import * as express from "express";
-import * as callables from "./callables";
-import * as triggers from "./triggers";
+import routes from "./routes";
 
 admin.initializeApp();
 export const db = admin.firestore();
@@ -10,35 +9,6 @@ export const db = admin.firestore();
 // export const FieldPath = admin.firestore.FieldPath;
 
 const app = express();
-/**
- * callable for workout
- */
-app.post("/workout", callables.createWorkout);
-app.put("/workout", callables.updateWorkout);
-app.delete("/workout/:workoutId", callables.deleteWorkout);
-app.get("/workouts/:workoutId", callables.getWorkout);
-app.post("/workouts", callables.getWorkouts);
+app.use("/", routes);
 
-/**
- * callable for User
- */
-app.post("/user", callables.createUser);
-app.put("/user", callables.updateUser);
-app.delete("/user/:userId", callables.deleteUser);
-app.get("/users/:userId", callables.getUser);
-app.post("/users", callables.getUsers);
-
-app.post("/exercise", callables.createExercise);
-app.put("/exercise", callables.updateExercise);
-app.delete("/exercise/:exerciseId", callables.deleteExercise);
-app.get("/exercises/:exerciseId", callables.getExercise);
-app.post("/exercises", callables.getExercises);
-
-
-/**
- * fileupload
- */
-app.post("/file", callables.uploadFiles);
-
-exports.onCreateWorkout = triggers.onCreateWorkout;
 exports.api = functions.https.onRequest(app);

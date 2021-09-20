@@ -1,82 +1,134 @@
 import { Request, Response } from 'express';
-import { db } from "../.";
+import { matchedData } from 'express-validator';
 // import {db, FieldValue, FieldPath} from "../.";
 import { COLLECTION_EXERCISE } from "../utils/constants";
-import { IResponseObject } from "../interfaces/common";
-import { createData, updateData, deleteDataById, getDataById } from "../repositories/curd.repo";
+import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
+import { IExercise } from '../interfaces';
 
-export const createExercise = async (req: Request, res: Response) => {
-  const params = req.body.data;
-  const result: any = await createData(COLLECTION_EXERCISE, "exerciseId", params );
-  console.log(result);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
+export const createExercise = async (req: Request, res: Response): Promise<Response> => {
+  try{
+    const params: IExercise = req.body.data;
+    const result = await createData(COLLECTION_EXERCISE, params );
+    if (!result.id) {
+      throw buildErrObject(500, result);
+    }
+    params.id = result.id;
+    return handleSuccess(res, { docs: { ...params } });
+  } catch (error) {
+    return handleError(res, error);
   }
 };
 
-export const updateExercise = async (req: Request, res: Response) => {
+export const updateExercise = async (req: Request, res: Response): Promise<Response> => {
   const exerciseId = req.body.exerciseId;
   const params:any = req.body.data;
-  const result:any = await updateData(COLLECTION_EXERCISE, "exerciseId", exerciseId, params);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
-};
-
-export const deleteExercise = async (req: Request, res: Response) => {
-  const exerciseId = req.params.exerciseId;
-  const result:any = await deleteDataById(COLLECTION_EXERCISE, exerciseId);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
-};
-
-export const getExercise = async (req: Request, res: Response) => {
-  const exerciseId = req.params.exerciseId;
-  const result:any = await getDataById(COLLECTION_EXERCISE, exerciseId);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
-};
-
-export const getExercises = async (req: Request, res: Response) => {
-  const searchData = req.body.data;
-  console.log(searchData);
-  const result = { success: false, payload: {}, error: {} };
   try {
-    const allSnaps = await db.collection(COLLECTION_EXERCISE).get();
+    // TODO: Uncomment when validation is implemented and replace data below with cleanData
+    // const cleanData = matchedData(data);
+    const result = await updateData(COLLECTION_EXERCISE, exerciseId, params);
+    if (!result) {
+        throw buildErrObject(500, result);
+    }
+    params.id = exerciseId;
+    return handleSuccess(res, { docs: { ...params } });
+  } catch (error) {
+      return handleError(res, error);
+  }
+};
+
+export const deleteExercise = async (req: Request, res: Response): Promise<Response> => {
+  const exerciseId = req.params.exerciseId;
+  try {
+    const data = matchedData(req);
+    const result = await deleteDataById(COLLECTION_EXERCISE, exerciseId);
+    if (result && result.name) {
+        result.id = data.exerciseId;
+        return handleSuccess(res, result);
+    }
+    throw buildErrObject(500, result);
+  } catch (error) {
+      return handleError(res, error);
+  }
+};
+
+export const getExercise = async (req: Request, res: Response): Promise<Response> => {
+  const exerciseId = req.params.exerciseId;
+  // const data = matchedData(req);
+  try {
+    const result = await getDataById(COLLECTION_EXERCISE, exerciseId);
+    if (result && result.name) {
+        result.id = exerciseId;
+        return handleSuccess(res, result);
+    }
+    throw buildErrObject(500, result);
+} catch (error) {
+    return handleError(res, error);
+}
+};
+
+export const getAllExercises = async (req: Request, res: Response): Promise<Response> => {
+  try{
+    const snapsResults = await getAllDatas(COLLECTION_EXERCISE);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
     const allExercises: any = [];
     let row = 0;
-    allSnaps.forEach((doc: any) => {
-      const exercises = doc.data();
-      exercises["exercisesId"] = doc.id;
-      allExercises.push(exercises);
-      row++;
+    snapsResults.forEach((doc: any) => {
+        const exercise = doc.data();
+        exercise['id'] = doc.id;
+        allExercises.push(exercise);
+        row++;
     });
-    result["success"] = true;
-    result["payload"] = {
-      docs: allExercises,
-      limit: 10,
-      page: 1,
-      totalPages: 1,
-      totalDocs: row,
-      hasPrevPage: false,
-      hasNextPage: false,
-      prevPage: 0,
-      nextPage: 0,
+    const result = {
+        docs: allExercises,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
     };
-    res.status(200).json(new IResponseObject(result));
-  } catch (err) {
-    result["success"] = false;
-    result["error"] = JSON.stringify(err);
-    res.status(500).json(new IResponseObject(result));
+
+    return handleSuccess(res, result);
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+export const searchExercises = async (req: Request, res: Response): Promise<Response> => {
+  const searchData = req.body.data;
+  console.log(searchData);
+  try{
+    const snapsResults = await getAllDatas(COLLECTION_EXERCISE);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
+    const allExercises: any = [];
+    let row = 0;
+    snapsResults.forEach((doc: any) => {
+        const exercise = doc.data();
+        exercise['id'] = doc.id;
+        allExercises.push(exercise);
+        row++;
+    });
+    const result = {
+        docs: allExercises,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
+    };
+
+    return handleSuccess(res, result);
+  } catch (error) {
+    return handleError(res, error);
   }
 };

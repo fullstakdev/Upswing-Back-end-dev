@@ -11,7 +11,7 @@ routes.get(
     "/",
     authMiddleware,
     roleMiddleware(IUserRoleType.MEMBER),
-    controller.getPrograms
+    controller.getAllPrograms
 );
 
 routes.get(

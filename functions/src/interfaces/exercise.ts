@@ -1,5 +1,3 @@
-import { IDurationUnit } from "./common";
-
 export interface IRequiredCondition {
     weight: number;
     weightUnit: string;
@@ -9,12 +7,12 @@ export interface IExercise {
     id?: string;
     trainerId?: string;
     name: string;
-    sets?: number;
-    repeats?: number;
+    setsNumber?: number;
+    repeatsNumber?: number;
     duration?: number;
-    durationUnit?: IDurationUnit;
+    durationUnit?: string;
     recoveryDuration?: number;
-    recoveryDurationUnit?: IDurationUnit;
+    recoveryDurationUnit?: string;
     videoClipUrl: string;
     requiredWeight: boolean;
     requiredConditions?: IRequiredCondition;

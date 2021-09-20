@@ -11,6 +11,7 @@ routes.post(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
+    validator.createWorkout,
     controller.createWorkout
 );
 
@@ -18,7 +19,7 @@ routes.put(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getWorkoutValidate,
+    validator.updateWorkout,
     controller.updateWorkout
 );
 
@@ -26,7 +27,7 @@ routes.delete(
     "/:workoutId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getWorkoutValidate,
+    validator.deleteWorkout,
     controller.deleteWorkout
 );
 
@@ -34,16 +35,24 @@ routes.get(
     "/:workoutId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getWorkoutValidate,
+    validator.getWorkout,
     controller.getWorkout
 );
 
-routes.post(
-    "/list",
+routes.get(
+    "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getWorkoutValidate,
-    controller.getWorkouts
+    validator.getWorkouts,
+    controller.getAllWorkouts
+);
+
+routes.post(
+    "/search",
+    // authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    // validator.getWorkouts,
+    controller.searchWorkouts
 );
 
 export default routes;

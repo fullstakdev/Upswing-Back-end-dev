@@ -10,40 +10,44 @@ const routes = Router();
 routes.post(
     "/",
     // authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
+    validator.createUser,
     controller.createUser
 );
 
 routes.put(
     "/",
     // authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getUserValidate,
+    validator.updateUser,
     controller.updateUser
 );
 
 routes.delete(
     "/:userId",
     // authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getUserValidate,
+    // roleMiddleware(IUserRoleType.ADMIN),
+    validator.deleteUser,
     controller.deleteUser
 );
 
 routes.get(
     "/:userId",
     // authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getUserValidate,
+    validator.getUser,
     controller.getUser
 );
 
-routes.post(
-    "/list",
+routes.get(
+    "/",
     // authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getUserValidate,
-    controller.getUsers
+    // roleMiddleware(IUserRoleType.ADMIN),
+    controller.getAllUsers
+);
+
+routes.post(
+    "/search",
+    // authMiddleware,
+    // validator.getUser,
+    controller.searchUsers
 );
 
 export default routes;

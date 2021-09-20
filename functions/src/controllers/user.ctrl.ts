@@ -1,81 +1,135 @@
 import { Request, Response } from "express";
-import { db } from "../.";
-// import {db, FieldValue, FieldPath} from ".";
+// import { matchedData } from 'express-validator';
+import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { IUser } from '../interfaces';
 import { COLLECTION_USER } from "../utils/constants";
-import { IResponseObject } from "../interfaces/common";
-import { createData, updateData, deleteDataById, getDataById } from "../repositories/curd.repo";
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
 
-export const createUser = async (req: Request, res: Response) => {
-  const params = req.body.data;
-  const result: any = await createData(COLLECTION_USER, "userId", params );
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
+export const createUser = async (req: Request, res: Response): Promise<Response> => {
+  const params: IUser = req.body.data;
+  // TODO: Uncomment when validation is implemented and replace data below with cleanData
+  // const cleanData = matchedData(data);
+  try {
+    const result = await createData(COLLECTION_USER, params );
+    if (result && result.id) {
+        params.id = result.id;
+        return handleSuccess(res, params);
+    }
+    throw buildErrObject(500, result);
+  } catch (error) {
+      return handleError(res, error);
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response): Promise<Response> => {
   const userId = req.body.userId;
   const params:any = req.body.data;
-  const result:any = await updateData(COLLECTION_USER, "userId", userId, params);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
-};
-
-export const deleteUser = async (req: Request, res: Response) => {
-  const userId = req.params.userId;
-  const result:any = await deleteDataById(COLLECTION_USER, userId);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
-};
-
-export const getUser = async (req: Request, res: Response) => {
-  const userId = req.params.userId;
-  const result:any = await getDataById(COLLECTION_USER, userId);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
-};
-
-export const getUsers = async (req: Request, res: Response) => {
-  const searchData = req.body.data;
-  console.log(searchData);
-  const result = { success: false, payload: {}, error: {} };
+  // TODO: Uncomment when validation is implemented and replace data below with cleanData
+  // const cleanData = matchedData(data);
   try {
-    const allSnaps = await db.collection(COLLECTION_USER).get();
+    const result = await updateData(COLLECTION_USER, userId, params);
+    if (!result) {
+        throw buildErrObject(500, result);
+    }
+    params.id = userId;
+    return handleSuccess(res, params);
+  } catch (error) {
+      return handleError(res, error);
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response): Promise<Response> => {
+  const userId = req.params.userId;
+  // const data = matchedData(req);
+  try {
+    const result = await deleteDataById(COLLECTION_USER, userId);
+    if (result && result.email) {
+        result.id = userId;
+        return handleSuccess(res, result);
+    }
+    throw buildErrObject(500, result);
+  } catch (error) {
+      return handleError(res, error);
+  }
+};
+
+export const getUser = async (req: Request, res: Response): Promise<Response> => {
+  const userId = req.params.userId;
+  // const data = matchedData(req);
+  try {
+    const result = await getDataById(COLLECTION_USER, userId);
+    if (!result) {
+        throw buildErrObject(500, result);
+    }
+    result.id = userId;
+    return handleSuccess(res, result);
+  } catch (error) {
+      return handleError(res, error);
+  }
+};
+
+export const getAllUsers = async(req: Request, res: Response): Promise<Response> => {
+  try {
+    const snapsResults = await getAllDatas(COLLECTION_USER);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
     const allUsers: any = [];
     let row = 0;
-    allSnaps.forEach((doc: any) => {
-      const user = doc.data();
-      user["userId"] = doc.id;
-      allUsers.push(user);
-      row++;
+    snapsResults.forEach((doc: any) => {
+        const user = doc.data();
+        user['id'] = doc.id;
+        allUsers.push(user);
+        row++;
     });
-    result["success"] = true;
-    result["payload"] = {
-      docs: allUsers,
-      limit: 10,
-      page: 1,
-      totalPages: 1,
-      totalDocs: row,
-      hasPrevPage: false,
-      hasNextPage: false,
-      prevPage: 0,
-      nextPage: 0,
+    const result = {
+        docs: allUsers,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
     };
-    res.status(200).json(new IResponseObject(result));
-  } catch (err) {
-    result["success"] = false;
-    result["error"] = JSON.stringify(err);
-    res.status(500).json(new IResponseObject(result));
+
+    return handleSuccess(res, result);
+  } catch (error) {
+      return handleError(res, error);
   }
+}
+
+export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
+  const searchData = req.body.data;
+  console.log(searchData);
+  try {
+    const snapsResults = await getAllDatas(COLLECTION_USER);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
+    const allUsers: any = [];
+    let row = 0;
+    snapsResults.forEach((doc: any) => {
+        const user = doc.data();
+        user['id'] = doc.id;
+        allUsers.push(user);
+        row++;
+    });
+    const result = {
+        docs: allUsers,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
+    };
+
+    return handleSuccess(res, result);
+  } catch (error) {
+      return handleError(res, error);
+  }  
 };

@@ -1,88 +1,134 @@
 import { Request, Response } from "express";
-import { db } from "../.";
-// import {db, FieldValue, FieldPath} from ".";
+// import { matchedData } from 'express-validator';
 import { COLLECTION_WORKOUT } from "../utils/constants";
-import { IResponseObject } from "../interfaces/common";
-import { createData, updateData, deleteDataById, getDataById } from "../repositories/curd.repo";
+import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
+import { IWorkout } from "../interfaces/workout";
 
-export const createWorkout = async (req: Request, res: Response) => {
-  const params = req.body.data;
-  params["rating"] = 0;
-  params["difficulty"] = 0;
-  const result: any = await createData(COLLECTION_WORKOUT, "workoutId", params );
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
+export const createWorkout = async (req: Request, res: Response): Promise<Response> => {
+  const params: IWorkout = req.body.data;
+  params.rating  = 0;
+  params.difficulty = 0;
+  try{
+    const result = await createData(COLLECTION_WORKOUT, params );
+    if (!result.id) {
+      throw buildErrObject(500, result);
+    }
+    params.id = result.id;
+    return handleSuccess(res, { docs: { ...params } });
+  } catch (error) {
+    return handleError(res, error);
   }
 };
 
-export const updateWorkout = async (req: Request, res: Response) => {
+export const updateWorkout = async (req: Request, res: Response): Promise<Response> => {
   const workoutId = req.body.workoutId;
-  const params:any = req.body.data;
-  const result:any = await updateData(COLLECTION_WORKOUT, "workoutId", workoutId, params);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
-  }
+  const params: IWorkout = req.body.data;
+  // const data = matchedData(req);
+  try {
+    const result = await updateData(COLLECTION_WORKOUT, workoutId, params);
+    if (!result) {
+        throw buildErrObject(500, result);
+    }
+    params.id = workoutId;
+    return handleSuccess(res, { docs: { ...params } });
+} catch (error) {
+    return handleError(res, error);
+}
 };
 
-export const deleteWorkout = async (req: Request, res: Response) => {
+export const deleteWorkout = async (req: Request, res: Response): Promise<Response> => {
   const workoutId = req.params.workoutId;
-  const result:any = await deleteDataById(COLLECTION_WORKOUT, workoutId);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
+  // const data = matchedData(req);
+  try {    
+    const result = await deleteDataById(COLLECTION_WORKOUT, workoutId);
+    if (!result) {
+        throw buildErrObject(500, result);
+    }
+    result.id = workoutId;
+    return handleSuccess(res, result);
+  } catch (error) {
+      return handleError(res, error);
   }
 };
 
-export const getWorkout = async (req: Request, res: Response) => {
+export const getWorkout = async (req: Request, res: Response): Promise<Response> => {
   const workoutId = req.params.workoutId;
-  const result:any = await getDataById(COLLECTION_WORKOUT, workoutId);
-  if (result.success) {
-    res.status(200).json(result);
-  } else {
-    res.status(result.error.code).json(result);
+  // const data = matchedData(req);
+  try {
+    const result = await getDataById(COLLECTION_WORKOUT, workoutId);
+    if (!result) {
+        throw buildErrObject(500, result);
+    }
+    result.id = workoutId;
+    return handleSuccess(res, result);
+  } catch (error) {
+      return handleError(res, error);
   }
 };
 
-export const getWorkouts = async (req: Request, res: Response) => {
+export const getAllWorkouts = async (req: Request, res: Response): Promise<Response> => {
+  try{
+    const snapsResults = await getAllDatas(COLLECTION_WORKOUT);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
+    const allWorkouts: any = [];
+    let row = 0;
+    snapsResults.forEach((doc: any) => {
+        const workout = doc.data();
+        workout['id'] = doc.id;
+        allWorkouts.push(workout);
+        row++;
+    });
+    const result = {
+        docs: allWorkouts,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
+    };
+
+    return handleSuccess(res, result);
+  } catch (error) {
+    return handleError(res, error);
+  }
+}
+
+export const searchWorkouts = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body.data;
   console.log(searchData);
-  const result = { success: false, payload: {}, error: {} };
-  try {
-    const allSnaps = await db.collection(COLLECTION_WORKOUT).get();
+  try{
+    const snapsResults = await getAllDatas(COLLECTION_WORKOUT);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
     const allWorkouts: any = [];
-    // allSnaps.forEach((doc: any) => {
-    //   // console.log("doc datas: ");
-    //   // console.log(doc.data());
-    //   allWorkouts.push(doc.data());
-    // });
     let row = 0;
-    allSnaps.forEach((doc: any) => {
-      const workout = doc.data();
-      workout["workoutId"] = doc.id;
-      allWorkouts.push(workout);
-      row++;
+    snapsResults.forEach((doc: any) => {
+        const workout = doc.data();
+        workout['id'] = doc.id;
+        allWorkouts.push(workout);
+        row++;
     });
-    result["success"] = true;
-    result["payload"] = {
-      docs: allWorkouts,
-      limit: 10,
-      page: 1,
-      totalPages: 1,
-      totalDocs: row,
-      hasPrevPage: false,
-      hasNextPage: false,
-      prevPage: 0,
-      nextPage: 0,
+    const result = {
+        docs: allWorkouts,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
     };
-    res.status(200).json(new IResponseObject(result));
-  } catch (err) {
-    result["success"] = false;
-    result["error"] = JSON.stringify(err);
-    res.status(500).json(new IResponseObject(result));
+
+    return handleSuccess(res, result);
+  } catch (error) {
+    return handleError(res, error);
   }
 };

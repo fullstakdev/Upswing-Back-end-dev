@@ -11,6 +11,7 @@ routes.post(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
+    validator.createExercise,
     controller.createExercise
 );
 
@@ -18,7 +19,7 @@ routes.put(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getExerciseValidate,
+    validator.updateExercise,
     controller.updateExercise
 );
 
@@ -26,7 +27,7 @@ routes.delete(
     "/:exerciseId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getExerciseValidate,
+    validator.deleteExercise,
     controller.deleteExercise
 );
 
@@ -34,16 +35,22 @@ routes.get(
     "/:exerciseId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getExerciseValidate,
+    validator.getExercise,
     controller.getExercise
 );
 
-routes.post(
-    "/list",
+routes.get(
+    "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getExerciseValidate,
-    controller.getExercise
+    controller.getAllExercises
+);
+
+routes.post(
+    "/search",
+    // authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    controller.searchExercises
 );
 
 export default routes;

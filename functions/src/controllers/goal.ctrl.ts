@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
-import repository from "../repositories/goal.repo";
-import { IGoal } from "../interfaces/goal";
+import repository from '../repositories/goal.repo';
+import { IGoal } from '../interfaces/goal';
 
 export const createGoal = async (req: Request, res: Response): Promise<Response> => {
   const params: IGoal = req.body.data;

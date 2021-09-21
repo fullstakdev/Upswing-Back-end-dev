@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { matchedData } from 'express-validator';
-// import {db, FieldValue, FieldPath} from "../.";
-import { COLLECTION_EXERCISE } from "../utils/constants";
+// import {db, FieldValue, FieldPath} from '../.';
+import { COLLECTION_EXERCISE } from '../utils/constants';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
 import { IExercise } from '../interfaces';
 
 export const createExercise = async (req: Request, res: Response): Promise<Response> => {

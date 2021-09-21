@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
 import { IUser } from '../interfaces';
-import { COLLECTION_USER } from "../utils/constants";
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
+import { COLLECTION_USER } from '../utils/constants';
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
 
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
   const params: IUser = req.body.data;

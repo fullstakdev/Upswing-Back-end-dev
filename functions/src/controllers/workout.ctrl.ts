@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
-import { COLLECTION_WORKOUT } from "../utils/constants";
+import { COLLECTION_WORKOUT } from '../utils/constants';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
-import { IWorkout } from "../interfaces/workout";
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import { IWorkout } from '../interfaces/workout';
 
 export const createWorkout = async (req: Request, res: Response): Promise<Response> => {
   const params: IWorkout = req.body.data;

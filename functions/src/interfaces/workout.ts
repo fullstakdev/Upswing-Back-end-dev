@@ -1,9 +1,9 @@
 export enum IWorkoutType {
-    VOD = "vod",
-    PLANNED = "planned",
-    LIVESTREAM = "livestream",
-    VIDEO_CONNECT = "video_connect",
-    IN_PERSON = "in_person"
+    VOD = 'vod',
+    PLANNED = 'planned',
+    LIVESTREAM = 'livestream',
+    VIDEO_CONNECT = 'video_connect',
+    IN_PERSON = 'in_person'
 }
 
 export interface IPlannedType {

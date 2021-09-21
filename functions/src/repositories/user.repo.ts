@@ -1,5 +1,5 @@
-import { db } from "../.";
-import { COLLECTION_USER } from "../utils/constants";
+import { db } from '../.';
+import { COLLECTION_USER } from '../utils/constants';
 
 const createUser = () => {};
 

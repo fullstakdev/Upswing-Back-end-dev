@@ -1,28 +1,28 @@
-import { Router } from "express";
-// import authMiddleware from "../middleware/auth";
-// import roleMiddleware from "../middleware/role";
-import * as controller from "../controllers/user.ctrl";
-import * as validator from "../validators/user.validator";
-// import { IUserRoleType } from "../interfaces/user";
+import { Router } from 'express';
+// import authMiddleware from '../middleware/auth';
+// import roleMiddleware from '../middleware/role';
+import * as controller from '../controllers/user.ctrl';
+import * as validator from '../validators/user.validator';
+// import { IUserRoleType } from '../interfaces/user';
 
 const routes = Router();
 
 routes.post(
-    "/",
+    '/',
     // authMiddleware,
     validator.createUser,
     controller.createUser
 );
 
 routes.put(
-    "/",
+    '/',
     // authMiddleware,
     validator.updateUser,
     controller.updateUser
 );
 
 routes.delete(
-    "/:userId",
+    '/:userId',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.ADMIN),
     validator.deleteUser,
@@ -30,21 +30,21 @@ routes.delete(
 );
 
 routes.get(
-    "/:userId",
+    '/:userId',
     // authMiddleware,
     validator.getUser,
     controller.getUser
 );
 
 routes.get(
-    "/",
+    '/',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.ADMIN),
     controller.getAllUsers
 );
 
 routes.post(
-    "/search",
+    '/search',
     // authMiddleware,
     // validator.getUser,
     controller.searchUsers

@@ -1,10 +1,10 @@
-import { IUserRoleType } from "../interfaces/user";
+import { IUserRoleType } from '../interfaces/user';
 
-export const COLLECTION_WORKOUT = "workouts";
-export const COLLECTION_USER = "users";
-export const COLLECTION_EXERCISE = "exercises";
-export const COLLECTION_GOAL = "goal";
-export const COLLECTION_PROGRAM = "programs";
+export const COLLECTION_WORKOUT = 'workouts';
+export const COLLECTION_USER = 'users';
+export const COLLECTION_EXERCISE = 'exercises';
+export const COLLECTION_GOAL = 'goal';
+export const COLLECTION_PROGRAM = 'programs';
 
 export const AllUserRoles = [
     IUserRoleType.ADMIN,

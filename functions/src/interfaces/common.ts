@@ -1,9 +1,9 @@
 export enum IDurationUnit {
-    WEEK = "week",
-    DAY = "day",
-    MONTH = "month",
-    MINUTE = "minute",
-    SECOND = "second"
+    WEEK = 'week',
+    DAY = 'day',
+    MONTH = 'month',
+    MINUTE = 'minute',
+    SECOND = 'second'
 }
 
 export interface IImageType {

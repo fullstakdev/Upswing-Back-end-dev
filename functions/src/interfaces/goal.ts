@@ -1,7 +1,7 @@
 export enum IGoalStatusType {
-    PENDING = "pending",
-    COMPLETED = "completed",
-    CANCELED = "canceled"
+    PENDING = 'pending',
+    COMPLETED = 'completed',
+    CANCELED = 'canceled'
 }
 
 export interface IGoal {

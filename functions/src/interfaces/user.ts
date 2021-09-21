@@ -1,7 +1,7 @@
 export enum IUserRoleType {
-    ADMIN = "admin",
-    TRAINER = "trainer",
-    MEMBER = "member"
+    ADMIN = 'admin',
+    TRAINER = 'trainer',
+    MEMBER = 'member'
 }
 
 export interface IUserLocationType {

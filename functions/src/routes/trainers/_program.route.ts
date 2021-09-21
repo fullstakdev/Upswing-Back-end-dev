@@ -1,14 +1,14 @@
-import { Router } from "express";
-// import authMiddleware from "../../middleware/auth";
-// import roleMiddleware from "../../middleware/role";
-import * as controller from "../../controllers/program.ctrl";
-import * as validator from "../../validators/program.validator";
-// import { IUserRoleType } from "../../interfaces/user";
+import { Router } from 'express';
+// import authMiddleware from '../../middleware/auth';
+// import roleMiddleware from '../../middleware/role';
+import * as controller from '../../controllers/program.ctrl';
+import * as validator from '../../validators/program.validator';
+// import { IUserRoleType } from '../../interfaces/user';
 
 const routes = Router();
 
 routes.post(
-    "/",
+    '/',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.createProgram,
@@ -16,7 +16,7 @@ routes.post(
 );
 
 routes.put(
-    "/",
+    '/',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.updateProgram,
@@ -24,7 +24,7 @@ routes.put(
 );
 
 routes.delete(
-    "/:programId",
+    '/:programId',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.deleteProgram,
@@ -32,7 +32,7 @@ routes.delete(
 );
 
 routes.get(
-    "/:programId",
+    '/:programId',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getProgram,
@@ -40,7 +40,7 @@ routes.get(
 );
 
 routes.get(
-    "/",
+    '/',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getPrograms,
@@ -48,7 +48,7 @@ routes.get(
 );
 
 routes.post(
-    "/search",
+    '/search',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getProgramValidate,

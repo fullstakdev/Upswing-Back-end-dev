@@ -1,21 +1,21 @@
-import { Router } from "express";
-// import authMiddleware from "../../middleware/auth";
-// import roleMiddleware from "../../middleware/role";
-import * as controller from "../../controllers/goal.ctrl";
-import * as validator from "../../validators/goal.validator";
-// import { IUserRoleType } from "../../interfaces/user";
+import { Router } from 'express';
+// import authMiddleware from '../../middleware/auth';
+// import roleMiddleware from '../../middleware/role';
+import * as controller from '../../controllers/goal.ctrl';
+import * as validator from '../../validators/goal.validator';
+// import { IUserRoleType } from '../../interfaces/user';
 
 const routes = Router();
 
 routes.post(
-    "/",
+    '/',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     controller.createGoal
 );
 
 routes.put(
-    "/",
+    '/',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getGoalValidate,
@@ -23,7 +23,7 @@ routes.put(
 );
 
 routes.delete(
-    "/:memberId/:goalId",
+    '/:memberId/:goalId',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getGoal,
@@ -31,7 +31,7 @@ routes.delete(
 );
 
 routes.get(
-    "/:memberId/:goalId",
+    '/:memberId/:goalId',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     validator.getGoal,
@@ -39,7 +39,7 @@ routes.get(
 );
 
 routes.get(
-    "/:memberId",
+    '/:memberId',
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getGoal,

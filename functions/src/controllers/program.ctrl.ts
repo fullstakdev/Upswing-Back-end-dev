@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import { matchedData } from "express-validator";
-import { IProgram } from "../interfaces";
-import { handleError, handleSuccess, buildErrObject } from "../utils";
-import { COLLECTION_PROGRAM } from "../utils/constants";
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from "../repositories/common.repo";
+import { Request, Response } from 'express';
+import { matchedData } from 'express-validator';
+import { IProgram } from '../interfaces';
+import { handleError, handleSuccess, buildErrObject } from '../utils';
+import { COLLECTION_PROGRAM } from '../utils/constants';
+import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
 
 export const createProgram = async (req: Request, res: Response): Promise<Response> => {
     const params: IProgram = req.body.data;
@@ -52,7 +52,7 @@ export const deleteProgram = async (req: Request, res: Response): Promise<Respon
 }
 
 export const searchPrograms = async (req: Request, res: Response) => {
-    res.status(200).json({'success': "ok"});
+    res.status(200).json({'success': 'ok'});
 }
 
 export const getProgram = async (req: Request, res: Response): Promise<Response> => {

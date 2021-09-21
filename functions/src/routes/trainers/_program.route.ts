@@ -11,6 +11,7 @@ routes.post(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
+    validator.createProgram,
     controller.createProgram
 );
 
@@ -18,7 +19,7 @@ routes.put(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgram,
+    validator.updateProgram,
     controller.updateProgram
 );
 
@@ -26,7 +27,7 @@ routes.delete(
     "/:programId",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgram,
+    validator.deleteProgram,
     controller.deleteProgram
 );
 
@@ -42,7 +43,7 @@ routes.get(
     "/",
     // authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgram,
+    validator.getPrograms,
     controller.getAllPrograms
 );
 

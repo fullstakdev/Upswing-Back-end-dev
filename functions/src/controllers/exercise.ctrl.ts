@@ -62,9 +62,9 @@ export const getExercise = async (req: Request, res: Response): Promise<Response
         return handleSuccess(res, result);
     }
     throw buildErrObject(500, result);
-} catch (error) {
-    return handleError(res, error);
-}
+  } catch (error) {
+      return handleError(res, error);
+  }
 };
 
 export const getAllExercises = async (req: Request, res: Response): Promise<Response> => {

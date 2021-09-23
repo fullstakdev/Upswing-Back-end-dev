@@ -4,6 +4,7 @@ import { IProgram } from '../interfaces';
 import { handleError, handleSuccess, buildErrObject } from '../utils';
 import { COLLECTION_PROGRAM } from '../utils/constants';
 import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import repository from '../repositories/program.repo';
 
 export const createProgram = async (req: Request, res: Response): Promise<Response> => {
     const params: IProgram = req.body.data;
@@ -51,8 +52,33 @@ export const deleteProgram = async (req: Request, res: Response): Promise<Respon
     }
 }
 
-export const searchPrograms = async (req: Request, res: Response) => {
-    res.status(200).json({'success': 'ok'});
+export const searchPrograms = async (req: Request, res: Response): Promise<Response> => {
+    const searchData = req.body.data;
+    try {
+        const searchResult = await repository.searchProgram(searchData);
+        const perPage = searchData.perPage ? searchData.perPage : 10;
+        const page = searchData.page;
+        const totalDocs = searchResult.length;
+        const totalPages = Math.ceil(totalDocs / perPage);
+        let nextPage = totalPages > page ? page + 1 : page;
+        let prevPage = page - 1 > 0 ? page - 1 : page;
+
+        const result = {
+            docs: searchResult,
+            limit: perPage,
+            page: page,
+            totalPages: totalPages,
+            totalDocs: totalDocs,
+            hasPrevPage: nextPage === page ? false : true,
+            hasNextPage: prevPage === page ? false : true,
+            prevPage: prevPage,
+            nextPage: nextPage,
+        };
+        console.log('search result: ', result);
+        return handleSuccess(res, result);
+    } catch (error) {
+        return handleError(res, error);
+    }
 }
 
 export const getProgram = async (req: Request, res: Response): Promise<Response> => {
@@ -71,31 +97,36 @@ export const getProgram = async (req: Request, res: Response): Promise<Response>
 };
 
 export const getAllPrograms = async (req: Request, res: Response): Promise<Response> => {
-    const searchData = req.body.data;
-    console.log(searchData);
+    const page = req.body.page ? req.body.page : 1;
+    const perPage = req.body.perpage ? req.body.page : 10;
     try{
         const snapsResults = await getAllDatas(COLLECTION_PROGRAM);
         if (!snapsResults) {
             throw buildErrObject(500, snapsResults);
         }
         const allPrograms: any = [];
-        let row = 0;
+        
         snapsResults.forEach((doc: any) => {
             const programs = doc.data();
             programs['id'] = doc.id;
             allPrograms.push(programs);
-            row++;
         });
+
+        const totalDocs = allPrograms.length;
+        const totalPages = Math.ceil(totalDocs / perPage);
+        let nextPage = totalPages > page ? page + 1 : page;
+        let prevPage = page - 1 > 0 ? page - 1 : page;
+
         const result = {
             docs: allPrograms,
-            limit: 10,
-            page: 1,
-            totalPages: 1,
-            totalDocs: row,
-            hasPrevPage: false,
-            hasNextPage: false,
-            prevPage: 0,
-            nextPage: 0,
+            limit: perPage,
+            page: page,
+            totalPages: totalPages,
+            totalDocs: totalDocs,
+            hasPrevPage: nextPage === page ? false : true,
+            hasNextPage: prevPage === page ? false : true,
+            prevPage: prevPage,
+            nextPage: nextPage,
         };
         return handleSuccess(res, result);
     } catch (error) {

@@ -1,11 +1,11 @@
-export enum GBWorkoutStatus {
+export enum IWorkoutStatus {
     NEW = 'new',
     MISSED = 'missed',
     COMPLETE = 'complete',
     PROGRESSIVE = 'progressive',
 }
 
-export enum GBWorkoutType {
+export enum IWorkoutType {
     VOD = 'vod',
     PLANNED = 'planned',
     LIVESTREAM = 'livestream',
@@ -13,30 +13,30 @@ export enum GBWorkoutType {
     IN_PERSON = 'in_person'
 }
 
-export enum GBUserType {
+export enum IUserType {
     MEMBER = 'member',
     TRAINER = 'trainer',
 }
 
-export enum GBLocationForProgram {
+export enum ILocationForProgram {
     HOME = 'home',
     HOME_GYM = 'home_gym',
     GYM = 'gym'
 }
 
-export enum GBProgramLevel {
+export enum IProgramLevel {
     BEGINNER = 'beginner',
     INTERMEDIATE = 'intermediate',
     ADVANCED = 'advanced'
 }
 
-export enum GBProgramFormat {
+export enum IProgramFormat {
     OWN_PACE = 'own_pace',
     GUIDED_GROUP = 'guided_group',
     ONE_TO_ONE = 'one_to_one',
 }
 
-export enum GBGenderType {
+export enum IGenderType {
     MAN = 'man',
     WOMAN = 'woman',
 }

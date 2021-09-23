@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { COLLECTION_WORKOUT } from '../utils/constants';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
 import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import repository from '../repositories/workout.repo';
 import { IWorkout } from '../interfaces/workout';
 
 export const createWorkout = async (req: Request, res: Response): Promise<Response> => {
@@ -103,30 +104,26 @@ export const searchWorkouts = async (req: Request, res: Response): Promise<Respo
   const searchData = req.body.data;
   console.log(searchData);
   try{
-    const snapsResults = await getAllDatas(COLLECTION_WORKOUT);
-    if (!snapsResults) {
-        throw buildErrObject(500, snapsResults);
-    }
-    const allWorkouts: any = [];
-    let row = 0;
-    snapsResults.forEach((doc: any) => {
-        const workout = doc.data();
-        workout['id'] = doc.id;
-        allWorkouts.push(workout);
-        row++;
-    });
-    const result = {
-        docs: allWorkouts,
-        limit: 10,
-        page: 1,
-        totalPages: 1,
-        totalDocs: row,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: 0,
-        nextPage: 0,
-    };
+    const searchResult = await repository.searchWorkout(searchData);
 
+    const perPage = searchData.perPage ? searchData.perPage : 10;
+        const page = searchData.page;
+        const totalDocs = searchResult.length;
+        const totalPages = Math.ceil(totalDocs / perPage);
+        let nextPage = totalPages > page ? page + 1 : page;
+        let prevPage = page - 1 > 0 ? page - 1 : page;
+
+        const result = {
+            docs: searchResult,
+            limit: perPage,
+            page: page,
+            totalPages: totalPages,
+            totalDocs: totalDocs,
+            hasPrevPage: nextPage === page ? false : true,
+            hasNextPage: prevPage === page ? false : true,
+            prevPage: prevPage,
+            nextPage: nextPage,
+        };
     return handleSuccess(res, result);
   } catch (error) {
     return handleError(res, error);

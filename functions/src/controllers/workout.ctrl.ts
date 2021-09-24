@@ -70,31 +70,20 @@ export const getWorkout = async (req: Request, res: Response): Promise<Response>
 };
 
 export const getAllWorkouts = async (req: Request, res: Response): Promise<Response> => {
+  const page = req.body.page ? req.body.page : 1;
+  const perPage = req.body.perpage ? req.body.page : 10;
   try{
     const snapsResults = await getAllItems(COLLECTION_WORKOUT);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
     const allWorkouts: any = [];
-    let row = 0;
     snapsResults.forEach((doc: any) => {
         const workout = doc.data();
         workout['id'] = doc.id;
         allWorkouts.push(workout);
-        row++;
     });
-    const result = {
-        docs: allWorkouts,
-        limit: 10,
-        page: 1,
-        totalPages: 1,
-        totalDocs: row,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: 0,
-        nextPage: 0,
-    };
-
+    const result = paginationHandler(allWorkouts, page, perPage);
     return handleSuccess(res, result);
   } catch (error) {
     return handleError(res, error);

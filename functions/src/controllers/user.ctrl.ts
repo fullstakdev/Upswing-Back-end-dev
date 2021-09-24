@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
-import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
 import { IUser } from '../interfaces';
 import { COLLECTION_USER } from '../utils/constants';
 import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+import repository from '../repositories/user.repo';
 // import { getAllPaginatedItems } from '../repositories/common.repo';
 
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
@@ -70,30 +71,20 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
 };
 
 export const getAllUsers = async(req: Request, res: Response): Promise<Response> => {
+  const page = req.body.page ? req.body.page : 1;
+  const perPage = req.body.perpage ? req.body.page : 10;
   try {
     const snapsResults = await getAllItems(COLLECTION_USER);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
     const allUsers: any = [];
-    let row = 0;
     snapsResults.forEach((doc: any) => {
         const user = doc.data();
         user['id'] = doc.id;
         allUsers.push(user);
-        row++;
     });
-    const result = {
-        docs: allUsers,
-        limit: 10,
-        page: 1,
-        totalPages: 1,
-        totalDocs: row,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: 0,
-        nextPage: 0,
-    };
+    const result = paginationHandler(allUsers, page, perPage);
 
     return handleSuccess(res, result);
   } catch (error) {
@@ -124,34 +115,12 @@ export const getAllUsers = async(req: Request, res: Response): Promise<Response>
 
 export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body.data;
-  console.log(searchData);
   try {
-    const snapsResults = await getAllItems(COLLECTION_USER);
-    if (!snapsResults) {
-        throw buildErrObject(500, snapsResults);
-    }
-    const allUsers: any = [];
-    let row = 0;
-    snapsResults.forEach((doc: any) => {
-        const user = doc.data();
-        user['id'] = doc.id;
-        allUsers.push(user);
-        row++;
-    });
-    const result = {
-        docs: allUsers,
-        limit: 10,
-        page: 1,
-        totalPages: 1,
-        totalDocs: row,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: 0,
-        nextPage: 0,
-    };
-
-    return handleSuccess(res, result);
+      const searchResult = await repository.searchUser(searchData);
+      const perPage = searchData.perPage ? searchData.perPage : 10;
+      const result = paginationHandler(searchResult, searchData.page, perPage);
+      return handleSuccess(res, result);
   } catch (error) {
       return handleError(res, error);
-  }  
+  }
 };

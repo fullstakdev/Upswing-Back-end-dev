@@ -36,7 +36,7 @@ export const getAllItems = async (collectionName: string) => {
 export const getAllPaginatedItems = async (
   collectionName: string,
   condition: IGetCondition,
-  options: IPaginationOption
+  options: IPaginationOption,
 ): Promise<IPaginationResponse> => {
   const { page, limit, sort } = options;
   const startRange = (page - 1) * limit;

@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
 import { COLLECTION_WORKOUT } from '../utils/constants';
 import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+// import { getAllPaginatedItems } from '../repositories/common.repo';
 import repository from '../repositories/workout.repo';
 import { IWorkout } from '../interfaces/workout';
 
@@ -11,7 +12,7 @@ export const createWorkout = async (req: Request, res: Response): Promise<Respon
   params.rating  = 0;
   params.difficulty = 0;
   try{
-    const result = await createData(COLLECTION_WORKOUT, params );
+    const result = await createItem(COLLECTION_WORKOUT, params );
     if (!result.id) {
       throw buildErrObject(500, result);
     }
@@ -27,7 +28,7 @@ export const updateWorkout = async (req: Request, res: Response): Promise<Respon
   const params: IWorkout = req.body.data;
   // const data = matchedData(req);
   try {
-    const result = await updateData(COLLECTION_WORKOUT, workoutId, params);
+    const result = await updateItem(COLLECTION_WORKOUT, workoutId, params);
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -42,7 +43,7 @@ export const deleteWorkout = async (req: Request, res: Response): Promise<Respon
   const workoutId = req.params.workoutId;
   // const data = matchedData(req);
   try {    
-    const result = await deleteDataById(COLLECTION_WORKOUT, workoutId);
+    const result = await deleteItemById(COLLECTION_WORKOUT, workoutId);
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -57,7 +58,7 @@ export const getWorkout = async (req: Request, res: Response): Promise<Response>
   const workoutId = req.params.workoutId;
   // const data = matchedData(req);
   try {
-    const result = await getDataById(COLLECTION_WORKOUT, workoutId);
+    const result = await getItemById(COLLECTION_WORKOUT, workoutId);
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -70,7 +71,7 @@ export const getWorkout = async (req: Request, res: Response): Promise<Response>
 
 export const getAllWorkouts = async (req: Request, res: Response): Promise<Response> => {
   try{
-    const snapsResults = await getAllDatas(COLLECTION_WORKOUT);
+    const snapsResults = await getAllItems(COLLECTION_WORKOUT);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
@@ -99,6 +100,29 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
     return handleError(res, error);
   }
 }
+
+// export const getAllWorkouts = async (req: Request, res: Response): Promise<Response> => {
+//   // testing purpose
+//   const condition = {
+//     key: 'type',
+//     operator: '==',
+//     value: 'planned',
+//   };
+
+//   // testing purpose
+//   const options = {
+//     page: 1,
+//     limit: 10,
+//     sort: 'createdAt',
+//   };
+
+//   try {
+//     const result = await getAllPaginatedItems(COLLECTION_WORKOUT, condition, options);
+//     return handleSuccess(res, result);
+//   } catch (error) {
+//     return handleError(res, error);
+//   }
+// };
 
 export const searchWorkouts = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body.data;

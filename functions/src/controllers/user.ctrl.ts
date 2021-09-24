@@ -3,14 +3,15 @@ import { Request, Response } from 'express';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
 import { IUser } from '../interfaces';
 import { COLLECTION_USER } from '../utils/constants';
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+// import { getAllPaginatedItems } from '../repositories/common.repo';
 
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
   const params: IUser = req.body.data;
   // TODO: Uncomment when validation is implemented and replace data below with cleanData
   // const cleanData = matchedData(data);
   try {
-    const result = await createData(COLLECTION_USER, params );
+    const result = await createItem(COLLECTION_USER, params );
     if (result && result.id) {
         params.id = result.id;
         return handleSuccess(res, params);
@@ -27,7 +28,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
   // TODO: Uncomment when validation is implemented and replace data below with cleanData
   // const cleanData = matchedData(data);
   try {
-    const result = await updateData(COLLECTION_USER, userId, params);
+    const result = await updateItem(COLLECTION_USER, userId, params);
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -42,7 +43,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<Response>
   const userId = req.params.userId;
   // const data = matchedData(req);
   try {
-    const result = await deleteDataById(COLLECTION_USER, userId);
+    const result = await deleteItemById(COLLECTION_USER, userId);
     if (result && result.email) {
         result.id = userId;
         return handleSuccess(res, result);
@@ -57,7 +58,7 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
   const userId = req.params.userId;
   // const data = matchedData(req);
   try {
-    const result = await getDataById(COLLECTION_USER, userId);
+    const result = await getItemById(COLLECTION_USER, userId);
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -70,7 +71,7 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
 
 export const getAllUsers = async(req: Request, res: Response): Promise<Response> => {
   try {
-    const snapsResults = await getAllDatas(COLLECTION_USER);
+    const snapsResults = await getAllItems(COLLECTION_USER);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
@@ -100,11 +101,32 @@ export const getAllUsers = async(req: Request, res: Response): Promise<Response>
   }
 }
 
+// export const getAllUsers = async (req: Request, res: Response) => {
+//   // testing
+//   const condition = {
+//     key: 'role',
+//     operator: '==',
+//     value: 'trainer',
+//   };
+//   const options = {
+//     page: 1,
+//     limit: 10,
+//     sort: 'createdAt',
+//   };
+
+//   try {
+//     const result = await getAllPaginatedItems(COLLECTION_USER, condition, options);
+//     return handleSuccess(res, result);
+//   } catch (error) {
+//     return handleError(res, error);
+//   }
+// };
+
 export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body.data;
   console.log(searchData);
   try {
-    const snapsResults = await getAllDatas(COLLECTION_USER);
+    const snapsResults = await getAllItems(COLLECTION_USER);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }

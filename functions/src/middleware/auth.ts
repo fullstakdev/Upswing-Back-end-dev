@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import { NextFunction, Request, Response } from 'express';
 import { handleError } from '../utils';
-import { getDataById } from '../repositories/common.repo';
+import { getItemById } from '../repositories/common.repo';
 import { COLLECTION_USER } from '../utils/constants';
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +16,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
             }
             const token = req.headers.authorization.split('Bearer ')[1];
             const decodedData = await admin.auth().verifyIdToken(token);
-            const user = await getDataById(COLLECTION_USER, decodedData.uid);
+            const user = await getItemById(COLLECTION_USER, decodedData.uid);
             req.body.user = user;
             return next();
         }

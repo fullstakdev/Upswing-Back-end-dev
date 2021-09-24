@@ -6,7 +6,7 @@ import routes from './routes';
 admin.initializeApp();
 export const db = admin.firestore();
 // export const FieldValue = admin.firestore.FieldValue;
-// export const FieldPath = admin.firestore.FieldPath;
+export const FieldPath = admin.firestore.FieldPath;
 
 const app = express();
 app.use('/', routes);

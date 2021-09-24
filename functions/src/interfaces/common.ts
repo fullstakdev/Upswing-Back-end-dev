@@ -23,3 +23,27 @@ export interface IResponseObject {
     error?: IErrorObject,
     timestamp: number
 }
+
+export interface IPaginationOption {
+    page: number,
+    limit: number,
+    sort: string
+}
+
+export interface IGetCondition {
+    key: string,
+    operator: any,
+    value: string
+}
+
+export interface IPaginationResponse {
+    limit: number,
+    prevPage: number,
+    nextPage: number,
+    hasPrevPage: boolean,
+    hasNextPage: boolean,
+    totalPages: number,
+    totalDocs: number,
+    page: number,
+    docs: Record<string, unknown>[]
+};

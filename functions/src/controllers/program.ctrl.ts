@@ -3,13 +3,13 @@ import { matchedData } from 'express-validator';
 import { IProgram } from '../interfaces';
 import { handleError, handleSuccess, buildErrObject } from '../utils';
 import { COLLECTION_PROGRAM } from '../utils/constants';
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
 import repository from '../repositories/program.repo';
 
 export const createProgram = async (req: Request, res: Response): Promise<Response> => {
     const params: IProgram = req.body.data;
-    try{
-        const result = await createData(COLLECTION_PROGRAM, params );
+    try {
+        const result = await createItem(COLLECTION_PROGRAM, params );
         if (!result.id) {
           throw buildErrObject(500, result);
         }
@@ -18,7 +18,7 @@ export const createProgram = async (req: Request, res: Response): Promise<Respon
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const updateProgram = async (req: Request, res: Response): Promise<Response> => {
     const programId = req.body.programId;
@@ -26,7 +26,7 @@ export const updateProgram = async (req: Request, res: Response): Promise<Respon
     try {
         // TODO: Uncomment when validation is implemented and replace data below with cleanData
         // const cleanData = matchedData(data);
-        const result = await updateData(COLLECTION_PROGRAM, programId, params);
+        const result = await updateItem(COLLECTION_PROGRAM, programId, params);
         if (!result) {
             throw buildErrObject(500, result);
         }
@@ -35,13 +35,13 @@ export const updateProgram = async (req: Request, res: Response): Promise<Respon
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const deleteProgram = async (req: Request, res: Response): Promise<Response> => {
     const programId = req.params.programId;
     try {
         const data = matchedData(req);
-        const result = await deleteDataById(COLLECTION_PROGRAM, programId);
+        const result = await deleteItemById(COLLECTION_PROGRAM, programId);
         if (result && result.name) {
             result.id = data.programId;
             return handleSuccess(res, result);
@@ -50,7 +50,7 @@ export const deleteProgram = async (req: Request, res: Response): Promise<Respon
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const searchPrograms = async (req: Request, res: Response): Promise<Response> => {
     const searchData = req.body.data;
@@ -60,8 +60,8 @@ export const searchPrograms = async (req: Request, res: Response): Promise<Respo
         const page = searchData.page;
         const totalDocs = searchResult.length;
         const totalPages = Math.ceil(totalDocs / perPage);
-        let nextPage = totalPages > page ? page + 1 : page;
-        let prevPage = page - 1 > 0 ? page - 1 : page;
+        const nextPage = totalPages > page ? page + 1 : page;
+        const prevPage = page - 1 > 0 ? page - 1 : page;
 
         const result = {
             docs: searchResult,
@@ -69,8 +69,8 @@ export const searchPrograms = async (req: Request, res: Response): Promise<Respo
             page: page,
             totalPages: totalPages,
             totalDocs: totalDocs,
-            hasPrevPage: nextPage === page ? false : true,
-            hasNextPage: prevPage === page ? false : true,
+            hasPrevPage: nextPage !== page,
+            hasNextPage: prevPage !== page,
             prevPage: prevPage,
             nextPage: nextPage,
         };
@@ -79,13 +79,13 @@ export const searchPrograms = async (req: Request, res: Response): Promise<Respo
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const getProgram = async (req: Request, res: Response): Promise<Response> => {
     const programId = req.params.programId;
     // const data = matchedData(req);
     try {
-        const result = await getDataById(COLLECTION_PROGRAM, programId);
+        const result = await getItemById(COLLECTION_PROGRAM, programId);
         if (result && result.name) {
             result.id = programId;
             return handleSuccess(res, result);
@@ -99,13 +99,13 @@ export const getProgram = async (req: Request, res: Response): Promise<Response>
 export const getAllPrograms = async (req: Request, res: Response): Promise<Response> => {
     const page = req.body.page ? req.body.page : 1;
     const perPage = req.body.perpage ? req.body.page : 10;
-    try{
-        const snapsResults = await getAllDatas(COLLECTION_PROGRAM);
+    try {
+        const snapsResults = await getAllItems(COLLECTION_PROGRAM);
         if (!snapsResults) {
             throw buildErrObject(500, snapsResults);
         }
         const allPrograms: any = [];
-        
+
         snapsResults.forEach((doc: any) => {
             const programs = doc.data();
             programs['id'] = doc.id;
@@ -114,8 +114,8 @@ export const getAllPrograms = async (req: Request, res: Response): Promise<Respo
 
         const totalDocs = allPrograms.length;
         const totalPages = Math.ceil(totalDocs / perPage);
-        let nextPage = totalPages > page ? page + 1 : page;
-        let prevPage = page - 1 > 0 ? page - 1 : page;
+        const nextPage = totalPages > page ? page + 1 : page;
+        const prevPage = page - 1 > 0 ? page - 1 : page;
 
         const result = {
             docs: allPrograms,
@@ -123,8 +123,8 @@ export const getAllPrograms = async (req: Request, res: Response): Promise<Respo
             page: page,
             totalPages: totalPages,
             totalDocs: totalDocs,
-            hasPrevPage: nextPage === page ? false : true,
-            hasNextPage: prevPage === page ? false : true,
+            hasPrevPage: nextPage !== page,
+            hasNextPage: prevPage !== page,
             prevPage: prevPage,
             nextPage: nextPage,
         };

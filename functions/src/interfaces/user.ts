@@ -38,6 +38,6 @@ export interface IUser {
     appleId?: string;
     facebookId?: string;
 
-    createAt: number;
-    updateAt?: number;
+    createdAt: number;
+    updatedAt?: number;
 }

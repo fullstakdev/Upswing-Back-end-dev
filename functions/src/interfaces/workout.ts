@@ -44,4 +44,5 @@ export interface IWorkout {
     livestream?: ILiveStreamType;
     video_connect?: IVideoConnectType;
     in_person?: IInPersonType;
+    createdAt: number;
 }

@@ -16,5 +16,6 @@ export interface IScheduleItem {
 export interface ISchedule {
     date: Date;
     status: IScheduleStatusType;
-    schedules: IScheduleItem[]
+    schedules: IScheduleItem[];
+    createdAt: number;
 }

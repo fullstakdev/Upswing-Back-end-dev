@@ -15,7 +15,7 @@ routes.get(
 );
 
 routes.get(
-    '/{programId}',
+    '/:programId',
     authMiddleware,
     roleMiddleware(IUserRoleType.MEMBER),
     validator.getProgram,

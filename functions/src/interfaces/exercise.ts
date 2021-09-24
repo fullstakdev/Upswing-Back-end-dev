@@ -16,4 +16,5 @@ export interface IExercise {
     videoClipUrl: string;
     requiredWeight: boolean;
     requiredConditions?: IRequiredCondition;
+    createdAt: number;
 }

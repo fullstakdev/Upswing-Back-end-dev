@@ -9,4 +9,5 @@ export interface IGoal {
     memberId: string;
     name: string;
     status?: IGoalStatusType;
+    createdAt: number;
 }

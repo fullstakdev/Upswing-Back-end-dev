@@ -3,13 +3,13 @@ import { matchedData } from 'express-validator';
 // import {db, FieldValue, FieldPath} from '../.';
 import { COLLECTION_EXERCISE } from '../utils/constants';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
-import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
+import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
 import { IExercise } from '../interfaces';
 
 export const createExercise = async (req: Request, res: Response): Promise<Response> => {
   try{
     const params: IExercise = req.body.data;
-    const result = await createData(COLLECTION_EXERCISE, params );
+    const result = await createItem(COLLECTION_EXERCISE, params );
     if (!result.id) {
       throw buildErrObject(500, result);
     }
@@ -26,7 +26,7 @@ export const updateExercise = async (req: Request, res: Response): Promise<Respo
   try {
     // TODO: Uncomment when validation is implemented and replace data below with cleanData
     // const cleanData = matchedData(data);
-    const result = await updateData(COLLECTION_EXERCISE, exerciseId, params);
+    const result = await updateItem(COLLECTION_EXERCISE, exerciseId, params);
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -41,7 +41,7 @@ export const deleteExercise = async (req: Request, res: Response): Promise<Respo
   const exerciseId = req.params.exerciseId;
   try {
     const data = matchedData(req);
-    const result = await deleteDataById(COLLECTION_EXERCISE, exerciseId);
+    const result = await deleteItemById(COLLECTION_EXERCISE, exerciseId);
     if (result && result.name) {
         result.id = data.exerciseId;
         return handleSuccess(res, result);
@@ -56,7 +56,7 @@ export const getExercise = async (req: Request, res: Response): Promise<Response
   const exerciseId = req.params.exerciseId;
   // const data = matchedData(req);
   try {
-    const result = await getDataById(COLLECTION_EXERCISE, exerciseId);
+    const result = await getItemById(COLLECTION_EXERCISE, exerciseId);
     if (result && result.name) {
         result.id = exerciseId;
         return handleSuccess(res, result);
@@ -68,8 +68,8 @@ export const getExercise = async (req: Request, res: Response): Promise<Response
 };
 
 export const getAllExercises = async (req: Request, res: Response): Promise<Response> => {
-  try{
-    const snapsResults = await getAllDatas(COLLECTION_EXERCISE);
+  try {
+    const snapsResults = await getAllItems(COLLECTION_EXERCISE);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
@@ -102,8 +102,8 @@ export const getAllExercises = async (req: Request, res: Response): Promise<Resp
 export const searchExercises = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body.data;
   console.log(searchData);
-  try{
-    const snapsResults = await getAllDatas(COLLECTION_EXERCISE);
+  try {
+    const snapsResults = await getAllItems(COLLECTION_EXERCISE);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }

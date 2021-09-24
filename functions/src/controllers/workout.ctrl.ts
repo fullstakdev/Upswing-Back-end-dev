@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
 import { COLLECTION_WORKOUT } from '../utils/constants';
-import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
 import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
 import repository from '../repositories/workout.repo';
 import { IWorkout } from '../interfaces/workout';
@@ -102,28 +102,10 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
 
 export const searchWorkouts = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body.data;
-  console.log(searchData);
   try{
     const searchResult = await repository.searchWorkout(searchData);
-
     const perPage = searchData.perPage ? searchData.perPage : 10;
-        const page = searchData.page;
-        const totalDocs = searchResult.length;
-        const totalPages = Math.ceil(totalDocs / perPage);
-        let nextPage = totalPages > page ? page + 1 : page;
-        let prevPage = page - 1 > 0 ? page - 1 : page;
-
-        const result = {
-            docs: searchResult,
-            limit: perPage,
-            page: page,
-            totalPages: totalPages,
-            totalDocs: totalDocs,
-            hasPrevPage: nextPage === page ? false : true,
-            hasNextPage: prevPage === page ? false : true,
-            prevPage: prevPage,
-            nextPage: nextPage,
-        };
+    const result = paginationHandler(searchResult, searchData.page, perPage);
     return handleSuccess(res, result);
   } catch (error) {
     return handleError(res, error);

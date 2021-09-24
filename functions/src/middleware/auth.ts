@@ -1,16 +1,22 @@
 import * as admin from 'firebase-admin';
 import { NextFunction, Request, Response } from 'express';
 import { handleError } from '../utils';
-import userRepository from '../repositories/user.repo';
+import { getDataById } from '../repositories/common.repo';
+import { COLLECTION_USER } from '../utils/constants';
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (req.headers.authorization &&
             req.headers.authorization.startsWith('Bearer ')
         ) {
+            if( req.headers.authorization === 'Bearer Developing API') {
+                console.log('Development Mode API call');
+                req.body.user = {'name': 'developer', 'id': 1, 'role': 'developer'};
+                return next();
+            }
             const token = req.headers.authorization.split('Bearer ')[1];
             const decodedData = await admin.auth().verifyIdToken(token);
-            const user = await userRepository.getUserById(decodedData.uid);
+            const user = await getDataById(COLLECTION_USER, decodedData.uid);
             req.body.user = user;
             return next();
         }

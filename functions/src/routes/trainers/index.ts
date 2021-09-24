@@ -9,5 +9,5 @@ const routes = Router();
 routes.use('/workout', workoutRoutes);
 routes.use('/exercise', exerciseRoutes);
 routes.use('/goal', goalRoutes);
-routes.use('/program', programRoutes);
+routes.use('/programs', programRoutes);
 export default routes;

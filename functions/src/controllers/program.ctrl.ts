@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { matchedData } from 'express-validator';
 import { IProgram } from '../interfaces';
-import { handleError, handleSuccess, buildErrObject } from '../utils';
+import { handleError, handleSuccess, buildErrObject, paginationHandler } from '../utils';
 import { COLLECTION_PROGRAM } from '../utils/constants';
 import { createData, updateData, deleteDataById, getDataById, getAllDatas } from '../repositories/common.repo';
 import repository from '../repositories/program.repo';
@@ -57,24 +57,7 @@ export const searchPrograms = async (req: Request, res: Response): Promise<Respo
     try {
         const searchResult = await repository.searchProgram(searchData);
         const perPage = searchData.perPage ? searchData.perPage : 10;
-        const page = searchData.page;
-        const totalDocs = searchResult.length;
-        const totalPages = Math.ceil(totalDocs / perPage);
-        let nextPage = totalPages > page ? page + 1 : page;
-        let prevPage = page - 1 > 0 ? page - 1 : page;
-
-        const result = {
-            docs: searchResult,
-            limit: perPage,
-            page: page,
-            totalPages: totalPages,
-            totalDocs: totalDocs,
-            hasPrevPage: nextPage === page ? false : true,
-            hasNextPage: prevPage === page ? false : true,
-            prevPage: prevPage,
-            nextPage: nextPage,
-        };
-        console.log('search result: ', result);
+        const result = paginationHandler(searchResult, searchData.page, perPage);
         return handleSuccess(res, result);
     } catch (error) {
         return handleError(res, error);
@@ -112,22 +95,7 @@ export const getAllPrograms = async (req: Request, res: Response): Promise<Respo
             allPrograms.push(programs);
         });
 
-        const totalDocs = allPrograms.length;
-        const totalPages = Math.ceil(totalDocs / perPage);
-        let nextPage = totalPages > page ? page + 1 : page;
-        let prevPage = page - 1 > 0 ? page - 1 : page;
-
-        const result = {
-            docs: allPrograms,
-            limit: perPage,
-            page: page,
-            totalPages: totalPages,
-            totalDocs: totalDocs,
-            hasPrevPage: nextPage === page ? false : true,
-            hasNextPage: prevPage === page ? false : true,
-            prevPage: prevPage,
-            nextPage: nextPage,
-        };
+        const result = paginationHandler(allPrograms, page, perPage);        
         return handleSuccess(res, result);
     } catch (error) {
         return handleError(res, error);

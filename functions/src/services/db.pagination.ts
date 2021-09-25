@@ -6,48 +6,45 @@ export const getAllItems = async (
     collectionName: string,
     startRange: number,
     limit: number,
-    condition?: IGetCondition,
+    conditions?: IGetCondition[],
     sortKeyword = 'createdAt'
 ) => {
+    let colRef: any = db.collection(collectionName);
+    let lastDocRef = colRef;
     // To handle cases where startAfter in 0 and no condition
-    if (!startRange && !condition) {
-        return await db.collection(collectionName)
-            .orderBy(sortKeyword)
-            .limit(limit)
-            .get();
+    if (!startRange && !conditions) {
+        return await colRef.orderBy(sortKeyword).limit(limit).get();
     }
     // If startAfter is 0 but condition is passed
-    if (!startRange && condition) {
-        return await db.collection(collectionName)
-            .orderBy(sortKeyword)
-            .where(condition.key, condition.operator, condition.value)
-            .limit(limit)
-            .get();
+    if (!startRange && conditions && conditions?.length > 0) {
+        conditions.forEach((condition) => {
+            colRef = colRef.where(condition.key, condition.operator, condition.value);
+        });
+        colRef = colRef.orderBy(sortKeyword);
+        return await colRef.limit(limit).get();
     }
-    if (condition) {
-        const firstBlock = db.collection(collectionName)
-            .orderBy(sortKeyword)
-            .where(condition.key, condition.operator, condition.value)
-            .limit(startRange);
-        const snapshot = await firstBlock.get();
+
+    if (conditions && conditions?.length > 0) {
+        conditions.forEach((condition) => {
+            colRef = colRef.where(condition.key, condition.operator, condition.value);
+        });
+        colRef = colRef.orderBy(sortKeyword);
+        const snapshot = await colRef.limit(startRange).get();
         const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-        return await db.collection(collectionName)
-            .orderBy(sortKeyword)
-            .where(condition.key, condition.operator, condition.value)
-            .startAfter(lastDoc.data().createdAt)
-            .limit(limit)
-            .get();
+
+        lastDocRef = lastDocRef.orderBy(sortKeyword);
+        conditions.forEach((condition) => {
+            lastDocRef = lastDocRef.where(condition.key, condition.operator, condition.value);
+        });
+        lastDocRef = lastDocRef.startAfter(lastDoc.data().createdAt);
+        return await lastDocRef.limit(limit).get();
     }
-    const firstBlock = db.collection(collectionName)
-        .orderBy(sortKeyword)
-        .limit(startRange);
-    const snapshot = await firstBlock.get();
+
+    const snapshot = await colRef.orderBy(sortKeyword).limit(startRange).get();
     const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-    return await db.collection(collectionName)
-        .orderBy(sortKeyword)
+    return await colRef.orderBy(sortKeyword)
         .startAfter(lastDoc.data().createdAt)
-        .limit(limit)
-        .get();
+        .limit(limit).get();
 };
 
 export const checkIfNextPage = async (

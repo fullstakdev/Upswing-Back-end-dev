@@ -4,9 +4,7 @@ import { handleError } from '../utils';
 import { IUserRoleType } from '../interfaces/user';
 
 const checkRole = (role: IUserRoleType) => (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body.user, role);
     try {
-        if(req.body.user.role === 'developer') return next();
         if (
             AllUserRoles.indexOf(role) >= 0 &&
             req.body.user &&

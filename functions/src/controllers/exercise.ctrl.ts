@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import { matchedData } from 'express-validator';
 // import {db, FieldValue, FieldPath} from '../.';
 import { COLLECTION_EXERCISE } from '../utils/constants';
-import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
+import { buildErrObject, handleError, handleSuccess } from '../utils';
 import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
 import { IExercise } from '../interfaces';
-import repository from '../repositories/exercise.repo';
 
 export const createExercise = async (req: Request, res: Response): Promise<Response> => {
   try{
@@ -69,21 +68,31 @@ export const getExercise = async (req: Request, res: Response): Promise<Response
 };
 
 export const getAllExercises = async (req: Request, res: Response): Promise<Response> => {
-  const page = req.body.page ? req.body.page : 1;
-  const perPage = req.body.perpage ? req.body.page : 10;
-  try{
+  try {
     const snapsResults = await getAllItems(COLLECTION_EXERCISE);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
     const allExercises: any = [];
+    let row = 0;
     snapsResults.forEach((doc: any) => {
         const exercise = doc.data();
         exercise['id'] = doc.id;
         allExercises.push(exercise);
+        row++;
     });
+    const result = {
+        docs: allExercises,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
+    };
 
-    const result = paginationHandler(allExercises, page, perPage);
     return handleSuccess(res, result);
   } catch (error) {
     return handleError(res, error);
@@ -91,11 +100,33 @@ export const getAllExercises = async (req: Request, res: Response): Promise<Resp
 };
 
 export const searchExercises = async (req: Request, res: Response): Promise<Response> => {
-  const searchData = req.body.data;  
-  try{
-    const searchResult = await repository.searchExercise(searchData);
-    const perPage = searchData.perPage ? searchData.perPage : 10;
-    const result = paginationHandler(searchResult, searchData.page, perPage);    
+  const searchData = req.body.data;
+  console.log(searchData);
+  try {
+    const snapsResults = await getAllItems(COLLECTION_EXERCISE);
+    if (!snapsResults) {
+        throw buildErrObject(500, snapsResults);
+    }
+    const allExercises: any = [];
+    let row = 0;
+    snapsResults.forEach((doc: any) => {
+        const exercise = doc.data();
+        exercise['id'] = doc.id;
+        allExercises.push(exercise);
+        row++;
+    });
+    const result = {
+        docs: allExercises,
+        limit: 10,
+        page: 1,
+        totalPages: 1,
+        totalDocs: row,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 0,
+        nextPage: 0,
+    };
+
     return handleSuccess(res, result);
   } catch (error) {
     return handleError(res, error);

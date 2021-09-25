@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
 import repository from '../repositories/goal.repo';
-import { IGoal } from '../interfaces/goal';
+import { IGoal } from '../interfaces';
 
 export const createGoal = async (req: Request, res: Response): Promise<Response> => {
   const params: IGoal = req.body.data;
-  try{
+  try {
     const result = await repository.createGoal(params);
     if (!result.id) {
       throw buildErrObject(500, result);
@@ -36,7 +36,7 @@ export const deleteGoal = async (req: Request, res: Response): Promise<Response>
   const goalId = req.params.goalId;
   const memberId = req.params.memberId;
   // const data = matchedData(req);
-  try {    
+  try {
     const result = await repository.deleteGoal(memberId, goalId);
     if (!result) {
         throw buildErrObject(500, result);
@@ -68,7 +68,7 @@ export const getGoal = async (req: Request, res: Response): Promise<Response> =>
 
 export const getAllGoals = async (req: Request, res: Response): Promise<Response> => {
   const memberId = req.params.memberId;
-  try{
+  try {
     const snapsResults = await repository.getGoals(memberId);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
@@ -98,4 +98,4 @@ export const getAllGoals = async (req: Request, res: Response): Promise<Response
   } catch (error) {
     return handleError(res, JSON.parse(error));
   }
-}
+};

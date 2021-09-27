@@ -1,4 +1,3 @@
-import { DocumentSnapshot } from 'firebase-functions/v1/firestore';
 import { IGetCondition } from '../interfaces/common';
 import { db, FieldPath } from '../index';
 
@@ -26,12 +25,12 @@ export const getAllItems = async (
 
     if (conditions && conditions?.length > 0) {
         conditions.forEach((condition) => {
+            console.log('condition: ', condition);
             colRef = colRef.where(condition.key, condition.operator, condition.value);
         });
         colRef = colRef.orderBy(sortKeyword);
         const snapshot = await colRef.limit(startRange).get();
         const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-
         lastDocRef = lastDocRef.orderBy(sortKeyword);
         conditions.forEach((condition) => {
             lastDocRef = lastDocRef.where(condition.key, condition.operator, condition.value);
@@ -51,7 +50,7 @@ export const checkIfNextPage = async (
     collectionName: string,
     startRange: number,
     limit: number,
-    lastDoc?: DocumentSnapshot,
+    lastDoc?: any,
     sortKeyword = 'createdAt'
 ): Promise<boolean> => {
     if (lastDoc) {

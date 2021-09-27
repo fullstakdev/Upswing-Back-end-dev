@@ -15,6 +15,6 @@ routes.use('/markets', marketRoutes);
 
 routes.use('/common', commonRoutes);
 
-routes.use('/user', userRoutes);
+routes.use('/users', userRoutes);
 
 export default routes;

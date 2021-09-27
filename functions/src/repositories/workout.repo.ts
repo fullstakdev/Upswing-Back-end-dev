@@ -6,6 +6,8 @@ interface ISearchWorkoutParams {
     types?: string[];
     trainerids?: string[];
     ids: string[];
+    startTime?: number;
+    endTime?: number;
     page: number;
     perPage?: number;
 }
@@ -20,7 +22,18 @@ const searchWorkout = async (data: any) => {
         if (params.name && !docData.name.includes(params.name)) return;
         if (params.types && !params.types.includes(docData.type) ) return;
         if (params.trainerids && params.trainerids.length > 0 &&
-            !params.trainerids.includes(docData.type)) return;
+            !params.trainerids.includes(docData.trainerId)) return;
+        if (params.startTime) {
+            if (params.endTime) {
+                if (docData.startTime < params.startTime && docData.startTime > params.endTime) {
+                    return;
+                }
+            } else {
+                if (docData.startTime !== params.startTime) {
+                    return;
+                }
+            }
+        }
         docData['id'] = doc.id;
         resultData.push(docData);
         return resultData;

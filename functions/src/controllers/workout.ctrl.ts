@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { COLLECTION_WORKOUT } from '../utils/constants';
 import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
 import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+// import { createItem, updateItem, deleteItemById, getItemById /* , getAllPaginatedItems */, getAllItems } from '../repositories/common.repo';
 // import { getAllPaginatedItems } from '../repositories/common.repo';
 import repository from '../repositories/workout.repo';
 import { IWorkout } from '../interfaces/workout';
@@ -92,11 +93,11 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
 
 // export const getAllWorkouts = async (req: Request, res: Response): Promise<Response> => {
 //   // testing purpose
-//   const condition = {
+//   const condition = [{
 //     key: 'type',
 //     operator: '==',
 //     value: 'planned',
-//   };
+//   }];
 
 //   // testing purpose
 //   const options = {
@@ -106,7 +107,7 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
 //   };
 
 //   try {
-//     const result = await getAllPaginatedItems(COLLECTION_WORKOUT, condition, options);
+//     const result = await getAllPaginatedItems(COLLECTION_WORKOUT, options, condition);
 //     return handleSuccess(res, result);
 //   } catch (error) {
 //     return handleError(res, error);

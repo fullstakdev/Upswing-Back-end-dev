@@ -1,9 +1,3 @@
-export enum IUserRoleType {
-    ADMIN = 'admin',
-    TRAINER = 'trainer',
-    MEMBER = 'member'
-}
-
 export interface IUserLocationType {
     lat: number;
     lng: number;
@@ -26,7 +20,7 @@ export interface IUser {
     lastname: string;
     gender: string;
     email: string;
-    role: IUserRoleType;
+    role: string;
     birthday?: string;
     phone?: string,
     photo?: string,

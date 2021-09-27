@@ -13,9 +13,10 @@ export enum IWorkoutType {
     IN_PERSON = 'in_person'
 }
 
-export enum IUserType {
-    MEMBER = 'member',
+export enum IUserRoleType {
+    ADMIN = 'admin',
     TRAINER = 'trainer',
+    MEMBER = 'member'
 }
 
 export enum ILocationForProgram {

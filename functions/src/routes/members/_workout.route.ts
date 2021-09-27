@@ -3,7 +3,7 @@ import authMiddleware from '../../middleware/auth';
 import roleMiddleware from '../../middleware/role';
 import * as controller from '../../controllers/workout.ctrl';
 import * as validator from '../../validators/workout.validator';
-import { IUserRoleType } from '../../interfaces/user';
+import { IUserRoleType } from '../../utils/enumeration';
 
 const routes = Router();
 

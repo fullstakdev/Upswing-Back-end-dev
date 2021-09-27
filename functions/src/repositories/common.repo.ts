@@ -35,29 +35,47 @@ export const getAllItems = async (collectionName: string) => {
 
 export const getAllPaginatedItems = async (
   collectionName: string,
-  conditions: IGetCondition[],
-  options: IPaginationOption
+  options: IPaginationOption,
+  conditions?: IGetCondition[],  
 ): Promise<IPaginationResponse> => {
   const { limit, page, sort } = options;
   const startRange = (page - 1) * limit;
-  const snapsResults = await dbPagination.getAllItems(collectionName, startRange, limit, conditions, sort);
+  let snapsResults;
+  if (conditions) {
+    console.log('exist condition');
+    snapsResults = await dbPagination.getAllItems(collectionName, startRange, limit, conditions, sort);
+  } else {
+    snapsResults = await dbPagination.getAllItems(collectionName, startRange, limit);
+  }
+   
   if (!snapsResults) {
     throw buildErrObject(500, snapsResults);
   }
   const allDocs: any = [];
-  snapsResults.forEach((doc: any) => {
-    const item = doc.data();
-    item['id'] = doc.id;
-    allDocs.push(item);
-  });
-  const lastDoc = snapsResults.docs[snapsResults.docs.length - 1];
-  const hasNextPage = await dbPagination.checkIfNextPage(collectionName, lastDoc.data().createdAt, 1, lastDoc);
-  const hasPrevPage = page > 1;
-  const totalDocs = await dbPagination.paginatedCount(collectionName);
-  const totalPages = Math.ceil(totalDocs / limit);
-  const nextPage = page < totalPages ? page + 1 : page;
-  const prevPage = page > 1 ? page - 1 : 1;
+  let lastDoc = null;
+  let hasNextPage = false;
+  let hasPrevPage = false;
+  let totalDocs = 0;
+  let totalPages = 0;
+  let nextPage = page < totalPages ? page + 1 : page;
+  let prevPage = page > 1 ? page - 1 : 1;
+  if (snapsResults._size > 0 ) {
+    console.log('snaps result: ', snapsResults._size);
+    snapsResults.forEach((doc: any) => {
+      const item = doc.data();
+      item['id'] = doc.id;
+      allDocs.push(item);
+    });
+    lastDoc = snapsResults.docs[snapsResults.docs.length - 1];
+    hasNextPage = await dbPagination.checkIfNextPage(collectionName, lastDoc.data().createdAt, 1, lastDoc);
+    hasPrevPage = page > 1;
+    totalDocs = await dbPagination.paginatedCount(collectionName);
+    totalPages = Math.ceil(totalDocs / limit);
+    nextPage = page < totalPages ? page + 1 : page;
+    prevPage = page > 1 ? page - 1 : 1;
+  }
   return {
+    docs: allDocs,
     limit,
     prevPage,
     nextPage,
@@ -66,6 +84,5 @@ export const getAllPaginatedItems = async (
     totalPages,
     totalDocs,
     page,
-    docs: allDocs,
   };
 };

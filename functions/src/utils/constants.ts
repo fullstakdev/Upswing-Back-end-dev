@@ -1,4 +1,4 @@
-import { IUserRoleType } from '../interfaces/user';
+import { IUserRoleType } from '../utils/enumeration';
 
 export const COLLECTION_WORKOUT = 'workouts';
 export const COLLECTION_USER = 'users';

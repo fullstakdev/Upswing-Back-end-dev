@@ -6,8 +6,8 @@ import programRoutes from './_program.route';
 
 const routes = Router();
 
-routes.use('/workout', workoutRoutes);
-routes.use('/exercise', exerciseRoutes);
-routes.use('/goal', goalRoutes);
+routes.use('/workouts', workoutRoutes);
+routes.use('/exercises', exerciseRoutes);
+routes.use('/goals', goalRoutes);
 routes.use('/programs', programRoutes);
 export default routes;

@@ -4,5 +4,5 @@ import workoutRoutes from './_workout.route';
 const routes = Router();
 
 routes.use('/programs', programRoutes);
-routes.use('/workout', workoutRoutes);
+routes.use('/workouts', workoutRoutes);
 export default routes;

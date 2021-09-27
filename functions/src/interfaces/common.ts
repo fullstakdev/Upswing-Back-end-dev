@@ -46,4 +46,4 @@ export interface IPaginationResponse {
     totalDocs: number,
     page: number,
     docs: Record<string, unknown>[]
-};
+}

@@ -1,6 +1,10 @@
-const getSchedules = () => {};
+const getSchedules = () => {
+    console.log('get schedule');
+};
 
-const getSchedule = () => {};
+const getSchedule = () => {
+    console.log('get schedule');
+};
 
 export default {
     getSchedules,

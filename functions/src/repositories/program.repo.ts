@@ -14,7 +14,7 @@ interface ISearchProgramParams {
 
 const searchProgram = async (data: any) => {
     const params: ISearchProgramParams = data;
-    const programs = await db.collection(COLLECTION_PROGRAM).get();
+    const programs = await db.collection(COLLECTION_PROGRAM).get();    
     const resultData: any = [];
     programs.docs.map((doc) => {
         const docData = doc.data();

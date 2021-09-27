@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
-import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
 import { IUser } from '../interfaces';
 import { COLLECTION_USER } from '../utils/constants';
-import { createItem, updateItem, deleteItemById, getItemById, getAllItems, getAllPaginatedItems } from '../repositories/common.repo';
-import { FieldValue } from '..';
+import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+import repository from '../repositories/user.repo';
+// import { getAllPaginatedItems } from '../repositories/common.repo';
 
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
   const params: IUser = req.body.data;
-  const timestamp = FieldValue.serverTimestamp(); // Instead of new Date().getTime()
-  params.createdAt = timestamp as unknown as number;
   // TODO: Uncomment when validation is implemented and replace data below with cleanData
   // const cleanData = matchedData(data);
   try {
@@ -71,71 +70,56 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
   }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  // testing
-  const conditions:any = [
-    {
-      key: 'role',
-      operator: '==',
-      value: 'trainer',
-    },
-    {
-      key: 'gender',
-      operator: '==',
-      value: 1,
-    },
-  ];
-
-  const options = {
-    page: 1,
-    limit: 10,
-    sort: 'createdAt',
-  };
-
-  // Testing params from req.body.data
-  if (req.body.data) {
-    options.limit = req.body.data.limit;
-    options.page = req.body.data.page;
-    options.sort = req.body.data.sort;
-  }
-
-  try {
-    const result = await getAllPaginatedItems(COLLECTION_USER, conditions, options);
-    return handleSuccess(res, result);
-  } catch (error) {
-    return handleError(res, error);
-  }
-};
-
-export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
-  const searchData = req.body.data;
-  console.log(searchData);
+export const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
+  const page = req.body.page ? req.body.page : 1;
+  const perPage = req.body.perpage ? req.body.page : 10;
   try {
     const snapsResults = await getAllItems(COLLECTION_USER);
     if (!snapsResults) {
         throw buildErrObject(500, snapsResults);
     }
     const allUsers: any = [];
-    let row = 0;
     snapsResults.forEach((doc: any) => {
         const user = doc.data();
         user['id'] = doc.id;
         allUsers.push(user);
-        row++;
     });
-    const result = {
-        docs: allUsers,
-        limit: 10,
-        page: 1,
-        totalPages: 1,
-        totalDocs: row,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: 0,
-        nextPage: 0,
-    };
+    const result = paginationHandler(allUsers, page, perPage);
 
     return handleSuccess(res, result);
+  } catch (error) {
+      return handleError(res, error);
+  }
+};
+
+// export const getAllUsers = async (req: Request, res: Response) => {
+//   // testing
+//   const condition = {
+//     key: 'role',
+//     operator: '==',
+//     value: 'trainer',
+//   };
+//   const options = {
+//     page: 1,
+//     limit: 10,
+//     sort: 'createdAt',
+//   };
+
+//   try {
+//     const result = await getAllPaginatedItems(COLLECTION_USER, condition, options);
+//     return handleSuccess(res, result);
+//   } catch (error) {
+//     return handleError(res, error);
+//   }
+// };
+
+export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
+  const searchData = req.body.data;
+  try {
+      const searchResult = await repository.searchUser(searchData);
+      const perPage = searchData.perPage ? searchData.perPage : 10;
+      const result = paginationHandler(searchResult, searchData.page, perPage);
+      return handleSuccess(res, result);
   } catch (error) {
       return handleError(res, error);
   }

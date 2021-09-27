@@ -21,7 +21,6 @@ const searchWorkout = async (data: any) => {
         if (params.types && !params.types.includes(docData.type) ) return;
         if (params.trainerids && params.trainerids.length > 0 &&
             !params.trainerids.includes(docData.type)) return;
-
         docData['id'] = doc.id;
         resultData.push(docData);
         return resultData;

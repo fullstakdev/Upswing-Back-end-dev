@@ -51,3 +51,23 @@ export const handleValidation = (req: Request, res: Response, next: NextFunction
         return handleError(res, buildErrObject(422, err.array()));
     }
 };
+
+export const paginationHandler = (paginationData: any[], currentPage: number, perPage: number) => {
+    const totalDocs = paginationData.length;
+    const totalPages = Math.ceil(totalDocs / perPage);
+    const nextPage = totalPages > currentPage ? currentPage + 1 : currentPage;
+    const prevPage = currentPage - 1 > 0 ? currentPage - 1 : currentPage;
+
+    const result = {
+        docs: paginationData,
+        limit: perPage,
+        page: currentPage,
+        totalPages: totalPages,
+        totalDocs: totalDocs,
+        hasPrevPage: nextPage === currentPage ? false : true,
+        hasNextPage: prevPage === currentPage ? false : true,
+        prevPage: prevPage,
+        nextPage: nextPage,
+    };
+    return result;
+};

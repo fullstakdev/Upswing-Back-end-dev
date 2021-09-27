@@ -2,13 +2,13 @@ import { db } from '../.';
 import { COLLECTION_GOAL, COLLECTION_USER } from '../utils/constants';
 
 const createGoal = async (data: any) => {
-    const createData = {name: data.name, status: data.status};
+    const createData = { name: data.name, status: data.status };
     return await db.collection(COLLECTION_USER).doc(data.memberId).collection(COLLECTION_GOAL).add(createData);
 };
 
 const updateGoal = async (data: any) => {
     const snapData = db.collection(COLLECTION_USER).doc(data.memberId).collection(COLLECTION_GOAL).doc(data.id);
-    const updateData = {name: data.name, status: data.status};
+    const updateData = { name: data.name, status: data.status };
     await snapData.set(updateData).catch((err) => {
         return err;
     });

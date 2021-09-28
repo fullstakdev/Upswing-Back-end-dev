@@ -7,7 +7,7 @@ import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from
 import repository from '../repositories/program.repo';
 
 export const createProgram = async (req: Request, res: Response): Promise<Response> => {
-    const params: IProgram = req.body.data;
+    const params: IProgram = req.body;
     try {
         const result = await createItem(COLLECTION_PROGRAM, params );
         if (!result.id) {
@@ -21,7 +21,7 @@ export const createProgram = async (req: Request, res: Response): Promise<Respon
 };
 
 export const updateProgram = async (req: Request, res: Response): Promise<Response> => {
-    const programId = req.body.programId;
+    const programId = req.body.id;
     const params: any = req.body.data;
     try {
         // TODO: Uncomment when validation is implemented and replace data below with cleanData
@@ -53,7 +53,7 @@ export const deleteProgram = async (req: Request, res: Response): Promise<Respon
 };
 
 export const searchPrograms = async (req: Request, res: Response): Promise<Response> => {
-    const searchData = req.body.data;
+    const searchData = req.body;
     try {
         const searchResult = await repository.searchProgram(searchData);
         const perPage = searchData.perPage ? searchData.perPage : 10;

@@ -1,8 +1,9 @@
 import * as admin from 'firebase-admin';
 import { NextFunction, Request, Response } from 'express';
 import { handleError } from '../utils';
-import { getItemById } from '../repositories/common.repo';
-import { COLLECTION_USER } from '../utils/constants';
+// import { getItemById } from '../repositories/common.repo';
+import repository from '../repositories/user.repo';
+// import { COLLECTION_USER } from '../utils/constants';
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -16,9 +17,14 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
             }
             const token = req.headers.authorization.split('Bearer ')[1];
             const decodedData = await admin.auth().verifyIdToken(token);
-            const user = await getItemById(COLLECTION_USER, decodedData.uid);
-            req.body.user = user;
-            return next();
+            // const user = await getItemById(COLLECTION_USER, decodedData.uid);
+            const user = await repository.getUserByEmail(decodedData.email);
+            console.log('from decodedData: ', user);
+            if (user.email) {
+                req.body.user = user;
+                return next();
+            }
+            handleError(res, { code: 500, message: 'No user' });
         }
         handleError(res, { code: 403, message: 'Unauthenticated' });
     } catch (err) {

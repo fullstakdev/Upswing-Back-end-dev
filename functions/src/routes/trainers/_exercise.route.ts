@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import authMiddleware from '../../middleware/auth';
-import roleMiddleware from '../../middleware/role';
+// import roleMiddleware from '../../middleware/role';
 import * as controller from '../../controllers/exercise.ctrl';
 import * as validator from '../../validators/exercise.validator';
-import { IUserRoleType } from '../../utils/enumeration';
+// import { IUserRoleType } from '../../utils/enumeration';
 
 const routes = Router();
 
 routes.post(
     '/',
     authMiddleware,
-    roleMiddleware(IUserRoleType.TRAINER),
+    // roleMiddleware(IUserRoleType.TRAINER),
     validator.createExercise,
     controller.createExercise
 );
@@ -18,7 +18,7 @@ routes.post(
 routes.put(
     '/',
     authMiddleware,
-    roleMiddleware(IUserRoleType.TRAINER),
+    // roleMiddleware(IUserRoleType.TRAINER),
     validator.updateExercise,
     controller.updateExercise
 );
@@ -26,7 +26,7 @@ routes.put(
 routes.delete(
     '/:exerciseId',
     authMiddleware,
-    roleMiddleware(IUserRoleType.TRAINER),
+    // roleMiddleware(IUserRoleType.TRAINER),
     validator.deleteExercise,
     controller.deleteExercise
 );
@@ -34,7 +34,7 @@ routes.delete(
 routes.get(
     '/:exerciseId',
     authMiddleware,
-    roleMiddleware(IUserRoleType.TRAINER),
+    // roleMiddleware(IUserRoleType.TRAINER),
     validator.getExercise,
     controller.getExercise
 );
@@ -42,14 +42,14 @@ routes.get(
 routes.get(
     '/',
     authMiddleware,
-    roleMiddleware(IUserRoleType.TRAINER),
+    // roleMiddleware(IUserRoleType.TRAINER),
     controller.getAllExercises
 );
 
 routes.post(
     '/search',
     authMiddleware,
-    roleMiddleware(IUserRoleType.TRAINER),
+    // roleMiddleware(IUserRoleType.TRAINER),
     controller.searchExercises
 );
 

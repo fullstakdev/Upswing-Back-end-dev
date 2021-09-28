@@ -9,7 +9,7 @@ import repository from '../repositories/workout.repo';
 import { IWorkout } from '../interfaces/workout';
 
 export const createWorkout = async (req: Request, res: Response): Promise<Response> => {
-  const params: IWorkout = req.body.data;
+  const params: IWorkout = req.body;
   params.rating = 0;
   params.difficulty = 0;
   try {
@@ -25,7 +25,7 @@ export const createWorkout = async (req: Request, res: Response): Promise<Respon
 };
 
 export const updateWorkout = async (req: Request, res: Response): Promise<Response> => {
-  const workoutId = req.body.workoutId;
+  const workoutId = req.body.id;
   const params: IWorkout = req.body.data;
   // const data = matchedData(req);
   try {

@@ -5,6 +5,12 @@ export enum IWorkoutStatus {
     PROGRESSIVE = 'progressive',
 }
 
+export enum IGoalStatus {
+    NEW = 'new',
+    PENDING = 'pending',
+    COMPLETE = 'complete',
+}
+
 export enum IWorkoutType {
     VOD = 'vod',
     PLANNED = 'planned',

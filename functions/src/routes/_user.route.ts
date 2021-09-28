@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import authMiddleware from '../middleware/auth';
-import roleMiddleware from '../middleware/role';
+// import roleMiddleware from '../middleware/role';
 import * as controller from '../controllers/user.ctrl';
 import * as validator from '../validators/user.validator';
-import { IUserRoleType } from '../utils/enumeration';
+// import { IUserRoleType } from '../utils/enumeration';
 
 const routes = Router();
 
@@ -24,7 +24,7 @@ routes.put(
 routes.delete(
     '/:userId',
     authMiddleware,
-    roleMiddleware(IUserRoleType.ADMIN),
+    // roleMiddleware(IUserRoleType.ADMIN),
     validator.deleteUser,
     controller.deleteUser
 );
@@ -39,7 +39,7 @@ routes.get(
 routes.get(
     '/',
     authMiddleware,
-    roleMiddleware(IUserRoleType.ADMIN),
+    // roleMiddleware(IUserRoleType.ADMIN),
     controller.getAllUsers
 );
 

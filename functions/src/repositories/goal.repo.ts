@@ -1,9 +1,19 @@
 import { db } from '../.';
 import { COLLECTION_GOAL, COLLECTION_USER } from '../utils/constants';
 
-const createGoal = async (data: any) => {
-    const createData = { name: data.name, status: data.status };
-    return await db.collection(COLLECTION_USER).doc(data.memberId).collection(COLLECTION_GOAL).add(createData);
+const createGoal = async (memberId: string, goalData: any) => {
+    return await db.collection(COLLECTION_USER).doc(memberId).collection(COLLECTION_GOAL).add(goalData);
+};
+
+const createGoals = async (memberId: string, goalData: any[]) => {
+    const batch = db.batch();
+    goalData.map((goal: any) => {
+        const goalRef = db.collection(COLLECTION_USER).doc(memberId).collection(COLLECTION_GOAL).doc();
+        batch.create(goalRef, goal);
+        return goalRef;
+    });
+    const result = await batch.commit();
+    return result;
 };
 
 const updateGoal = async (data: any) => {
@@ -34,6 +44,7 @@ const deleteGoal = async (memberId: string, goalId: string) => {
 
 export default {
     createGoal,
+    createGoals,
     updateGoal,
     getGoals,
     getGoal,

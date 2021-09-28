@@ -3,16 +3,19 @@ import { Request, Response } from 'express';
 import { buildErrObject, handleError, handleSuccess } from '../utils';
 import repository from '../repositories/goal.repo';
 import { IGoal } from '../interfaces/goal';
+import { IGoalStatus } from '../utils/enumeration';
 
 export const createGoal = async (req: Request, res: Response): Promise<Response> => {
-  const params: IGoal = req.body.data;
+  const memberId = req.body.userId;
+  const goalName = req.body.name;
+  const data = { name: goalName, status: IGoalStatus.NEW };
   try {
-    const result = await repository.createGoal(params);
+    const result = await repository.createGoal(memberId, data);
     if (!result.id) {
       throw buildErrObject(500, result);
     }
-    params.id = result.id;
-    return handleSuccess(res, { docs: { ...params } });
+    const docs = { id: result.id, name: goalName, status: false, memberId: memberId };
+    return handleSuccess(res, { docs: { ...docs } });
   } catch (error) {
     return handleError(res, JSON.parse(error));
   }

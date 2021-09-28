@@ -3,19 +3,19 @@ import { Request, Response } from 'express';
 import { buildErrObject, handleError, handleSuccess, paginationHandler } from '../utils';
 import { IUser } from '../interfaces';
 import { COLLECTION_USER } from '../utils/constants';
-import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+import { deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
 import repository from '../repositories/user.repo';
 // import { getAllPaginatedItems } from '../repositories/common.repo';
 
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
-  const params: IUser = req.body.data;
+  const params: IUser = req.body;
   // TODO: Uncomment when validation is implemented and replace data below with cleanData
   // const cleanData = matchedData(data);
   try {
-    const result = await createItem(COLLECTION_USER, params );
+    const result = await repository.createUser(params);
     if (result && result.id) {
-        params.id = result.id;
-        return handleSuccess(res, params);
+        console.log(result);
+        return handleSuccess(res, result);
     }
     throw buildErrObject(500, result);
   } catch (error) {
@@ -24,12 +24,18 @@ export const createUser = async (req: Request, res: Response): Promise<Response>
 };
 
 export const updateUser = async (req: Request, res: Response): Promise<Response> => {
-  const userId = req.body.userId;
-  const params:any = req.body.data;
+  const userId: string = req.body.id;
+  const params: any = req.body.data;
+  const goals: any[] = req.body.goals;
   // TODO: Uncomment when validation is implemented and replace data below with cleanData
   // const cleanData = matchedData(data);
   try {
-    const result = await updateItem(COLLECTION_USER, userId, params);
+    let result;
+    if (goals) {
+      result = await repository.updateUser(userId, params, goals);
+    } else {
+      result = await repository.updateUser(userId, params);
+    }    
     if (!result) {
         throw buildErrObject(500, result);
     }
@@ -114,7 +120,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<Response
 // };
 
 export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
-  const searchData = req.body.data;
+  const searchData = req.body;
   try {
       const searchResult = await repository.searchUser(searchData);
       const perPage = searchData.perPage ? searchData.perPage : 10;

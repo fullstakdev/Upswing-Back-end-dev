@@ -9,7 +9,7 @@ import repository from '../repositories/exercise.repo';
 
 export const createExercise = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const params: IExercise = req.body.data;
+    const params: IExercise = req.body;
     const result = await createItem(COLLECTION_EXERCISE, params );
     if (!result.id) {
       throw buildErrObject(500, result);
@@ -22,7 +22,7 @@ export const createExercise = async (req: Request, res: Response): Promise<Respo
 };
 
 export const updateExercise = async (req: Request, res: Response): Promise<Response> => {
-  const exerciseId = req.body.exerciseId;
+  const exerciseId = req.body.id;
   const params: any = req.body.data;
   try {
     // TODO: Uncomment when validation is implemented and replace data below with cleanData
@@ -91,7 +91,7 @@ export const getAllExercises = async (req: Request, res: Response): Promise<Resp
 };
 
 export const searchExercises = async (req: Request, res: Response): Promise<Response> => {
-  const searchData = req.body.data;  
+  const searchData = req.body;  
   try {
     const searchResult = await repository.searchExercise(searchData);
     const perPage = searchData.perPage ? searchData.perPage : 10;

@@ -45,4 +45,5 @@ export interface IWorkout {
     video_connect?: IVideoConnectType;
     in_person?: IInPersonType;
     createdAt: number;
+    startTime: number;
 }

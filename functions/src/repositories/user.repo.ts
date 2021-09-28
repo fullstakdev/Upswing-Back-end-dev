@@ -7,7 +7,7 @@ interface ISearchUserParams {
     gender?: string;
     email?: string;
     role?: string;
-    goalArchive?: boolean;
+    goalArchive?: string;
 }
 
 const createUser = async (userData: any) => {
@@ -24,9 +24,6 @@ const createUser = async (userData: any) => {
 
 const updateUser = async (userId: string, userData: any, goalDatas?: any[]) => {
     const userInfo: any = userData.data;
-    if (userData.archivement) {
-        userInfo.archivement = userData.archivement;
-    }
     const snapData = db.collection(COLLECTION_USER).doc(userId);
     await snapData.set(userInfo).catch((err) => {
         return err;

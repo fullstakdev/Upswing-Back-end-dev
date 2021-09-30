@@ -31,7 +31,12 @@ const updateUser = async (userId: string, userData: any, goalDatas?: any[]) => {
     return true;
 };
 
-const getUserByEmail = async (userEmail: any) => {
+/**
+ * To get only user information from token
+ * @param userEmail 
+ * @returns user Object
+ */
+const getUserInfoByEmail = async (userEmail: any) => {
     const user = await (await db.collection(COLLECTION_USER)
         .where('email', '==', userEmail).get()).docs;
     if (user && user.length > 0) {
@@ -62,5 +67,5 @@ export default {
     createUser,
     updateUser,
     searchUser,
-    getUserByEmail,
+    getUserInfoByEmail,
 };

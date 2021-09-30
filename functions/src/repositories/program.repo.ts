@@ -31,6 +31,13 @@ const searchProgram = async (data: any) => {
     return resultData;
 };
 
+const getProgramsByWorkoutId = (workoutId: string) => {
+    return [
+        {programId: 'NK3aJmZ3QJN3jeNoPgDg', programName: 'lose weight'},
+        {programId: 'OnLa4XTeToYu6gGgnYU9', programName: 'deeply sleep'}
+    ];
+}
 export default {
     searchProgram,
+    getProgramsByWorkoutId,
 };

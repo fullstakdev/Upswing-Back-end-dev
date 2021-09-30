@@ -4,14 +4,15 @@ import { handleError } from '../utils';
 import { IUserRoleType } from '../utils/enumeration';
 
 const checkRole = (role: IUserRoleType) => (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body.user, role);
+    const loggedUser = JSON.parse(String(req.headers.user));
+    console.log('checking user information: ', loggedUser, role);
     try {
-        if (req.body.user.role === 'developer') return next();
+        if (loggedUser.role === 'developer') return next();
         if (
             AllUserRoles.indexOf(role) >= 0 &&
-            req.body.user &&
-            req.body.user.role &&
-            req.body.user.role === role
+            loggedUser &&
+            loggedUser.role &&
+            loggedUser.role === role
         ) {
             return next();
         }

@@ -1,48 +1,35 @@
 import { db } from '../.';
-import { COLLECTION_WORKOUT } from '../utils/constants';
-import repository from './trainer.repo';
+import { COLLECTION_WORKOUT, COLLECTION_EXERCISE } from '../utils/constants';
+// import repository from './trainer.repo';
 
-interface ISearchWorkoutParams {
-    name?: string;
-    types?: string[];
-    trainerids?: string[];
-    ids: string[];
-    fromTime?: number;
-    toTime?: number;
-    page: number;
-    perPage?: number;
+const getAllWorkoutsByIds = async (ids: string[]) => {
+    const resultData: any = [];
+    if ((await db.collection(COLLECTION_WORKOUT).listDocuments()).length > 0) {        
+        ids.map( async (id: string) => {
+            const doc: any = await (await db.collection(COLLECTION_WORKOUT).doc(id).get()).data();
+            if (doc) {
+                doc.id = id;
+                resultData.push(doc);
+            }
+        });
+    }
+    return resultData;
 }
 
-const searchWorkout = async (data: any) => {
-    const params: ISearchWorkoutParams = data;
-    const workouts = await db.collection(COLLECTION_WORKOUT).get();
-    const resultData: any = [];
-    workouts.docs.map( async (doc) => {
-        const docData = doc.data();
-        if (params.ids && params.ids.length > 0 && !params.ids.includes(doc.id)) return;
-        if (params.name && !docData.name.includes(params.name)) return;
-        if (params.types && !params.types.includes(docData.type) ) return;
-        if (params.trainerids && params.trainerids.length > 0 &&
-            !params.trainerids.includes(docData.trainerId)) return;
-        if (params.fromTime) {
-            if (params.toTime) {
-                if (docData.startTime < params.fromTime && docData.startTime > params.toTime) {
-                    return;
-                }
-            } else {
-                if (docData.startTime !== params.fromTime) {
-                    return;
-                }
-            }
+const getDurationPlannedWorkout= async (exerciseIds: string[]) => {
+    let sum = 400;
+    await exerciseIds.map( async (id) => {
+        const exercise = await (await db.collection(COLLECTION_EXERCISE).doc(id).get()).data();
+        if (exercise && exercise.duration) {
+            sum += Number(exercise.duration);
+            console.log(id, sum);
         }
-        docData['id'] = doc.id;
-        docData['trainerName'] = await repository.getTrainerNameById(docData.trainerId);
-        resultData.push(docData);
-        return resultData;
-    });
-    return resultData;
-};
+        return sum;
+    })
+    return sum;
+}
 
 export default {
-    searchWorkout,
+    getAllWorkoutsByIds,
+    getDurationPlannedWorkout
 };

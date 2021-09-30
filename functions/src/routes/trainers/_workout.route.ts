@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import authMiddleware from '../../middleware/auth';
-// import roleMiddleware from '../../middleware/role';
+import roleMiddleware from '../../middleware/role';
 import * as controller from '../../controllers/workout.ctrl';
 import * as validator from '../../validators/workout.validator';
-// import { IUserRoleType } from '../../utils/enumeration';
+import { IUserRoleType } from '../../utils/enumeration';
 
 const routes = Router();
 
 routes.post(
     '/',
     authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
+    roleMiddleware(IUserRoleType.TRAINER),
     validator.createWorkout,
     controller.createWorkout
 );
@@ -32,14 +32,6 @@ routes.delete(
 );
 
 routes.get(
-    '/:workoutId',
-    authMiddleware,
-    // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getWorkout,
-    controller.getWorkout
-);
-
-routes.get(
     '/',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
@@ -47,11 +39,19 @@ routes.get(
     controller.getAllWorkouts
 );
 
+routes.get(
+    '/:workoutId',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    validator.getWorkout,
+    controller.getWorkout
+);
+
 routes.post(
     '/search',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getWorkouts,
+    validator.getWorkouts,
     controller.searchWorkouts
 );
 

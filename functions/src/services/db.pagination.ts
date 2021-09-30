@@ -11,11 +11,14 @@ export const getAllItems = async (
     let colRef: any = db.collection(collectionName);
     let lastDocRef = colRef;
     // To handle cases where startAfter in 0 and no condition
-    if (!startRange && !conditions) {
+
+    console.log('options: ', startRange, limit, sortKeyword);
+    console.log('exist: ', conditions);
+    if (!startRange && !conditions) { console.log('noe startrange and conditions')
         return await colRef.orderBy(sortKeyword).limit(limit).get();
     }
     // If startAfter is 0 but condition is passed
-    if (!startRange && conditions && conditions?.length > 0) {
+    if (!startRange && conditions && conditions?.length > 0) {console.log('no startrange');
         conditions.forEach((condition) => {
             colRef = colRef.where(condition.key, condition.operator, condition.value);
         });
@@ -23,18 +26,18 @@ export const getAllItems = async (
         return await colRef.limit(limit).get();
     }
 
-    if (conditions && conditions?.length > 0) {
+    if (conditions && conditions?.length > 0) {console.log('conditions');
         conditions.forEach((condition) => {
             console.log('condition: ', condition);
             colRef = colRef.where(condition.key, condition.operator, condition.value);
         });
         colRef = colRef.orderBy(sortKeyword);
         const snapshot = await colRef.limit(startRange).get();
-        const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-        lastDocRef = lastDocRef.orderBy(sortKeyword);
+        const lastDoc = snapshot.docs[snapshot.docs.length - 1];        
         conditions.forEach((condition) => {
             lastDocRef = lastDocRef.where(condition.key, condition.operator, condition.value);
         });
+        lastDocRef = lastDocRef.orderBy(sortKeyword);
         lastDocRef = lastDocRef.startAfter(lastDoc.data().createdAt);
         return await lastDocRef.limit(limit).get();
     }

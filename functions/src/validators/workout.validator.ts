@@ -9,6 +9,18 @@ export const createWorkout = [
 ];
 
 export const updateWorkout = [
+    check('id')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('update workout Id param is missing.'),
+    check('data')
+        .exists()
+        .withMessage('MISSING')
+        .not()
+        .isEmpty()
+        .withMessage('update workout data param is missing.'),
     (req: Request, res: Response, next: NextFunction) => {
         handleValidation(req, res, next);
     },

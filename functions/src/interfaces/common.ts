@@ -33,7 +33,7 @@ export interface IPaginationOption {
 export interface IGetCondition {
     key: string,
     operator: any,
-    value: string
+    value: any
 }
 
 export interface IPaginationResponse {

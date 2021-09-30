@@ -12,16 +12,16 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
         ) {
             if ( req.headers.authorization === 'Bearer Developing API') {
                 console.log('Development Mode API call');
-                req.body.user = { 'name': 'developer', 'id': 1, 'role': 'developer' };
+                req.headers.user = JSON.stringify({ 'name': 'developer', 'id': 1, 'role': 'developer' });
                 return next();
             }
             const token = req.headers.authorization.split('Bearer ')[1];
             const decodedData = await admin.auth().verifyIdToken(token);
             // const user = await getItemById(COLLECTION_USER, decodedData.uid);
-            const user = await repository.getUserByEmail(decodedData.email);
+            const user = await repository.getUserInfoByEmail(decodedData.email);
             console.log('from decodedData: ', user);
             if (user.email) {
-                req.body.user = user;
+                req.headers.user = JSON.stringify(user);
                 return next();
             }
             handleError(res, { code: 500, message: 'No user' });

@@ -29,6 +29,9 @@ export interface IInPersonType {
     duration: number;
     duration_unit: string;
     location: string;
+    // place: string;
+    // address: string;
+    // coordinate: number;
 }
 
 export interface IWorkout {
@@ -44,6 +47,19 @@ export interface IWorkout {
     livestream?: ILiveStreamType;
     video_connect?: IVideoConnectType;
     in_person?: IInPersonType;
-    createdAt: number;
     startTime: number;
+    createdAt: number;
+    updatedAt?: number;
 }
+
+export interface ISearchWorkoutParams {
+    name?: string;
+    type?: string;
+    ids?: string[];
+    trainerId?: string;
+    from?: number;
+    to?: number;
+    page?: number;
+    limit?: number;
+    sort?: string;
+  }

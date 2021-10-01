@@ -3,7 +3,8 @@ import { matchedData } from 'express-validator';
 import { IProgram } from '../interfaces';
 import { handleError, handleSuccess, buildErrObject, paginationHandler } from '../utils';
 import { COLLECTION_PROGRAM } from '../utils/constants';
-import { createItem, updateItem, deleteItemById, getItemById, getAllItems } from '../repositories/common.repo';
+import { IUserRoleType } from '../utils/enumeration';
+import { createItem, updateItem, deleteItemById, getItemById, getAllPaginatedItems } from '../repositories/common.repo';
 import repository from '../repositories/program.repo';
 
 export const createProgram = async (req: Request, res: Response): Promise<Response> => {
@@ -80,24 +81,55 @@ export const getProgram = async (req: Request, res: Response): Promise<Response>
 };
 
 export const getAllPrograms = async (req: Request, res: Response): Promise<Response> => {
-    const page = req.body.page ? req.body.page : 1;
-    const perPage = req.body.perpage ? req.body.page : 10;
+    const page: number = req.query.page ? Number(req.query.page) : 1;
+    const perPage: number = req.query.limit ? Number(req.query.limit) : 10;
+    const sort: string = req.query.sort ? String(req.query.sort) : 'createdAt';
+  
+    const options = {
+      page: page,
+      limit: perPage,
+      sort: sort,
+    };
+  
     try {
-        const snapsResults = await getAllItems(COLLECTION_PROGRAM);
-        if (!snapsResults) {
-            throw buildErrObject(500, snapsResults);
+      const result = await getAllPaginatedItems(COLLECTION_PROGRAM, options);
+      return handleSuccess(res, result);
+    } catch (error) {
+      return handleError(res, error);
+    }
+  };
+
+export const getProgramsByTrainerId = async (req: Request, res: Response): Promise<Response> => {
+    const trainerId = req.params.trainerId;
+    try {
+        const result = await repository.getProgramsByUserId(IUserRoleType.TRAINER, trainerId);
+        if (result) {
+            return handleSuccess(res, result);
         }
-        const allPrograms: any = [];
-
-        snapsResults.forEach((doc: any) => {
-            const programs = doc.data();
-            programs['id'] = doc.id;
-            allPrograms.push(programs);
-        });
-
-        const result = paginationHandler(allPrograms, page, perPage);
-        return handleSuccess(res, result);
+        throw buildErrObject(500, result);
     } catch (error) {
         return handleError(res, error);
     }
-};
+}
+
+export const getProgramsByMemberId = async (req: Request, res: Response): Promise<Response> => {
+    const memberId = req.params.memberId;
+    try {
+        const result = await repository.getProgramsByUserId(IUserRoleType.MEMBER, memberId);
+        if (result) {
+            return handleSuccess(res, result);
+        }
+        throw buildErrObject(500, result);
+    } catch (error) {
+        return handleError(res, error);
+    }
+}
+
+export const getProgramsByStatus = async (req: Request, res: Response): Promise<Response> => {
+
+    try {
+        return handleSuccess(res, {});
+    } catch (error) {
+        return handleError(res, error);
+    }
+}

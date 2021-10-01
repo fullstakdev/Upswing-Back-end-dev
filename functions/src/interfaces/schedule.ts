@@ -1,10 +1,5 @@
 import { IWorkout } from './workout';
-
-export enum IScheduleStatusType {
-    PENDING = 'pending',
-    COMPLETED = 'completed',
-    CANCELED = 'canceled'
-}
+import { IScheduleStatusType } from '../utils/enumeration';
 
 export interface IScheduleItem {
     id: string,

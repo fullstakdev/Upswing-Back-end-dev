@@ -32,6 +32,14 @@ routes.delete(
 );
 
 routes.get(
+    '/',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    validator.getPrograms,
+    controller.getAllPrograms
+);
+
+routes.get(
     '/:programId',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
@@ -40,18 +48,18 @@ routes.get(
 );
 
 routes.get(
-    '/',
+    '/user/:trainerId',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    validator.getPrograms,
-    controller.getAllPrograms
+    // validator.getProgram,
+    controller.getProgramsByTrainerId
 );
 
 routes.post(
     '/search',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
-    // validator.getProgramValidate,
+    validator.getPrograms,
     controller.searchPrograms
 );
 

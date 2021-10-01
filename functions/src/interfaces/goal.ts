@@ -1,8 +1,4 @@
-export enum IGoalStatusType {
-    PENDING = 'pending',
-    COMPLETED = 'completed',
-    CANCELED = 'canceled'
-}
+import { IGoalStatusType } from '../utils/enumeration';
 
 export interface IGoal {
     id?: string;

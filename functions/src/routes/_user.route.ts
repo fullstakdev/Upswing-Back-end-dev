@@ -30,6 +30,13 @@ routes.delete(
 );
 
 routes.get(
+    '/',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.ADMIN),
+    controller.getAllUsers
+);
+
+routes.get(
     '/:userId',
     authMiddleware,
     validator.getUser,
@@ -37,10 +44,10 @@ routes.get(
 );
 
 routes.get(
-    '/',
+    '/clients/:trainerId',
     authMiddleware,
-    // roleMiddleware(IUserRoleType.ADMIN),
-    controller.getAllUsers
+    validator.getUser,
+    controller.getUser
 );
 
 routes.post(

@@ -1,5 +1,6 @@
 import { db } from '../.';
 import { COLLECTION_PROGRAM } from '../utils/constants';
+import { IUserRoleType } from '../utils/enumeration';
 
 interface ISearchProgramParams {
     name?: string;
@@ -31,13 +32,42 @@ const searchProgram = async (data: any) => {
     return resultData;
 };
 
-const getProgramsByWorkoutId = (workoutId: string) => {
+const getProgramsByWorkoutId = async (workoutId: string) => {
     return [
         {programId: 'NK3aJmZ3QJN3jeNoPgDg', programName: 'lose weight'},
         {programId: 'OnLa4XTeToYu6gGgnYU9', programName: 'deeply sleep'}
     ];
 }
+
+const getProgramsByUserId = async (role: string, userId: string) => {
+    let programDatas;
+    let result: any = [];
+    if (role === IUserRoleType.TRAINER) {
+        programDatas = await db.collection(COLLECTION_PROGRAM)
+            .where('trainerId', '==', userId).get();
+    } else if (role === IUserRoleType.MEMBER) {
+        programDatas = await db.collection(COLLECTION_PROGRAM)
+            .where('memberIds', 'array-contains', userId).get();
+    }
+    
+    if (programDatas && programDatas.docs) {
+        if (programDatas.docs.length > 0) {
+            programDatas.docs.map((doc) => {
+                result.push(doc.data());
+            })
+        }
+        return { docs: result };
+    }
+    return null;
+}
+
+const getProgramsByStatus = async (status: string) => {
+    return {};
+}
+
 export default {
     searchProgram,
     getProgramsByWorkoutId,
+    getProgramsByUserId,
+    getProgramsByStatus,
 };

@@ -22,4 +22,20 @@ routes.get(
     controller.getProgram
 );
 
+routes.get(
+    '/user/:memberId',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    // validator.getProgram,
+    controller.getProgramsByMemberId
+);
+
+routes.get(
+    '/status/:status',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    validator.getPrograms,
+    controller.getProgramsByStatus
+);
+
 export default routes;

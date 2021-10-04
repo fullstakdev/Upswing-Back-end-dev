@@ -47,6 +47,13 @@ routes.get(
     controller.getWorkout
 );
 
+routes.get(
+    '/program/:programId',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    controller.getWorkoutByProgramId
+);
+
 routes.post(
     '/search',
     authMiddleware,

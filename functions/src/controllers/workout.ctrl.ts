@@ -94,6 +94,20 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
   }
 };
 
+export const getWorkoutByProgramId = async (req: Request, res: Response): Promise<Response> => {
+  const programId = req.params.programId;
+  try {
+    const result = await repository.getAllWorkoutsByProgramId(programId);
+    console.log('workouts by program id: ', programId, result);
+    if (result){
+      return handleSuccess(res, result);
+    }
+    throw buildErrObject(500, "no data");
+  } catch (err) {
+    return handleError(res, err);
+  }
+}
+
 export const searchWorkouts = async (req: Request, res: Response): Promise<Response> => {
   const searchData: ISearchWorkoutParams = req.body;
   // const userInfo = JSON.parse(String(req.headers.user));

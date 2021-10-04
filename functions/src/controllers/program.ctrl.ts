@@ -6,6 +6,7 @@ import { COLLECTION_PROGRAM } from '../utils/constants';
 import { IUserRoleType } from '../utils/enumeration';
 import { createItem, updateItem, deleteItemById, getItemById, getAllPaginatedItems } from '../repositories/common.repo';
 import repository from '../repositories/program.repo';
+import userRepository from '../repositories/user.repo';
 
 export const createProgram = async (req: Request, res: Response): Promise<Response> => {
     const params: IProgram = req.body;
@@ -117,6 +118,23 @@ export const getProgramsByMemberId = async (req: Request, res: Response): Promis
     try {
         const result = await repository.getProgramsByUserId(IUserRoleType.MEMBER, memberId);
         if (result) {
+            return handleSuccess(res, result);
+        }
+        throw buildErrObject(500, result);
+    } catch (error) {
+        return handleError(res, error);
+    }
+}
+
+export const getUsersByProgramId = async (req: Request, res: Response): Promise<Response> => {
+    const programId = req.params.programId;
+    try {
+        const result = await getItemById(COLLECTION_PROGRAM, programId);
+        if (result && result.name) {
+            result.id = programId;
+            console.log('members in program', result.memberIds);
+            const users = await userRepository.getUsersByMemberIds(result.memberIds);
+            result.members = users;
             return handleSuccess(res, result);
         }
         throw buildErrObject(500, result);

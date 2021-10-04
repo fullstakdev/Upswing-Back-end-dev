@@ -46,8 +46,15 @@ routes.get(
 routes.get(
     '/clients/:trainerId',
     authMiddleware,
-    validator.getUser,
+    // validator.getUser,
     controller.getUser
+);
+
+routes.get(
+    '/program/:programId',
+    authMiddleware,
+    // validator.getUser,
+    controller.getUsersByProgramId
 );
 
 routes.post(

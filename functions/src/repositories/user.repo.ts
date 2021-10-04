@@ -46,6 +46,26 @@ const getUserInfoByEmail = async (userEmail: any) => {
     return {};
 };
 
+const getUsersByProgramId = async (programId: string) => {
+    // const user = await db.collection(COLLECTION_USER);
+    return {};
+}
+
+const getUsersByMemberIds = async (memberIds: string[]) => {
+    const usersRef = await db.collection(COLLECTION_USER);
+    const refDocs: any = [];
+    const result: any = [];
+    memberIds.map(async (memberId) => {
+        refDocs.push(usersRef.doc(memberId).get());
+    });
+    
+    await Promise.all(refDocs).then(userDocs => {
+        userDocs.forEach((userDoc: any) => result.push(userDoc.data()));
+        return result;
+    })
+    return result;
+}
+
 const searchUser = async (data: any) => {
     const params: ISearchUserParams = data;
     const users = await db.collection(COLLECTION_USER).get();    
@@ -68,4 +88,6 @@ export default {
     updateUser,
     searchUser,
     getUserInfoByEmail,
+    getUsersByProgramId,
+    getUsersByMemberIds,
 };

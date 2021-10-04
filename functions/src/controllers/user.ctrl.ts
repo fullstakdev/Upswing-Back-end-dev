@@ -98,26 +98,16 @@ export const getAllUsers = async (req: Request, res: Response): Promise<Response
   }
 };
 
-// export const getAllUsers = async (req: Request, res: Response) => {
-//   // testing
-//   const condition = {
-//     key: 'role',
-//     operator: '==',
-//     value: 'trainer',
-//   };
-//   const options = {
-//     page: 1,
-//     limit: 10,
-//     sort: 'createdAt',
-//   };
-
-//   try {
-//     const result = await getAllPaginatedItems(COLLECTION_USER, condition, options);
-//     return handleSuccess(res, result);
-//   } catch (error) {
-//     return handleError(res, error);
-//   }
-// };
+export const getUsersByProgramId = async (req: Request, res: Response) => {
+  const programId = req.params.programId;
+  try {
+    const result = await repository.getUsersByProgramId(programId);
+    return handleSuccess(res, result);
+  } catch (err) {
+    return handleError(res, err);
+  }
+  
+};
 
 export const searchUsers = async (req: Request, res: Response): Promise<Response> => {
   const searchData = req.body;

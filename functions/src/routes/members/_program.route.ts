@@ -23,7 +23,7 @@ routes.get(
 );
 
 routes.get(
-    '/user/:memberId',
+    '/member/:memberId',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getProgram,

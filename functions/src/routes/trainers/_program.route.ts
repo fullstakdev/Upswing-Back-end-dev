@@ -48,11 +48,27 @@ routes.get(
 );
 
 routes.get(
-    '/user/:trainerId',
+    '/trainer/:trainerId',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getProgram,
     controller.getProgramsByTrainerId
+);
+
+routes.get(
+    '/user/:programId',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    // validator.getProgram,
+    controller.getUsersByProgramId
+);
+
+routes.get(
+    '/status/:status',
+    authMiddleware,
+    // roleMiddleware(IUserRoleType.TRAINER),
+    // validator.getProgram,
+    controller.getProgramsByStatus
 );
 
 routes.post(

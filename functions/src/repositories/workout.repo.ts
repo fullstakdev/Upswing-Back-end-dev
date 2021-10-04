@@ -16,6 +16,22 @@ const getAllWorkoutsByIds = async (ids: string[]) => {
     return resultData;
 }
 
+const getAllWorkoutsByProgramId = async (id: string) => {
+    const resultData: any = [];
+    await db.collection(COLLECTION_WORKOUT).where('programIds', 'array-contains', id)
+        .get().then( responseData => {
+            responseData.docs.map((doc) => {
+                resultData.push(doc.data());
+            });
+            return resultData;
+        })
+        .catch(err => {
+            console.log(err);
+            return null;
+        });
+    return resultData;
+}
+
 const getDurationPlannedWorkout= async (exerciseIds: string[]) => {
     let sum = 400;
     await exerciseIds.map( async (id) => {
@@ -31,5 +47,6 @@ const getDurationPlannedWorkout= async (exerciseIds: string[]) => {
 
 export default {
     getAllWorkoutsByIds,
+    getAllWorkoutsByProgramId,
     getDurationPlannedWorkout
 };

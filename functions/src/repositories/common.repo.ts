@@ -10,13 +10,14 @@ import workoutRepository from '../repositories/workout.repo';
 import programRepository from '../repositories/program.repo';
 
 export const createItem = async (collectionName: string, data: any) => {
+  data.createdAt = new Date().getTime();
   return await db.collection(collectionName).add(data);
 };
 
 export const updateItem = async (collectionName: string, updateId: string, data: any) => {
   const snapData = db.collection(collectionName).doc(updateId);
   const doc = (await snapData.get()).data();
-  let updateData: any = data;
+  let updateData: any = data;  
   if( doc ) {
     const keys = Object.keys(data);
     keys.map( (key: string) => {
@@ -25,6 +26,7 @@ export const updateItem = async (collectionName: string, updateId: string, data:
     });
     updateData = doc;
   }
+  updateData.updatedAt = new Date().getTime();
   await snapData.set(updateData).catch((err) => {
       return err;
   });

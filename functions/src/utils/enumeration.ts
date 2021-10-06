@@ -67,7 +67,6 @@ export enum IGoalStatusType {
     CANCELED = 'canceled'
 }
 export enum IGoalStatus {
-    NEW = 'new',
     PENDING = 'pending',
     COMPLETE = 'complete',
 }

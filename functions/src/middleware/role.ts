@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { AllUserRoles } from '../utils/constants';
-import { handleError } from '../utils';
+import { handleError, getUserInfoByToken } from '../utils';
 import { IUserRoleType } from '../utils/enumeration';
 
 const checkRole = (role: IUserRoleType) => (req: Request, res: Response, next: NextFunction) => {
-    const loggedUser = JSON.parse(String(req.headers.user));
+    const loggedUser = getUserInfoByToken(req);
     console.log('checking user information: ', loggedUser, role);
     try {
         if (loggedUser.role === 'developer') return next();

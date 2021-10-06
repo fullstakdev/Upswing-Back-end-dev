@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 // import { matchedData } from 'express-validator';
 import { COLLECTION_WORKOUT } from '../utils/constants';
-import { buildErrObject, handleError, handleSuccess } from '../utils';
+import { buildErrObject, handleError, handleSuccess, getUserInfoByToken } from '../utils';
 import { createItem, updateItem, deleteItemById, getItemById, getAllPaginatedItems } from '../repositories/common.repo';
 import repository from '../repositories/workout.repo';
 import { IWorkout, ISearchWorkoutParams } from '../interfaces/workout';
@@ -79,6 +79,9 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
   const page: number = req.query.page ? Number(req.query.page) : 1;
   const perPage: number = req.query.limit ? Number(req.query.limit) : 10;
   const sort: string = req.query.sort ? String(req.query.sort) : 'createdAt';
+  const trainer = getUserInfoByToken(req);
+  const trainerId = trainer.userId;
+  const conditions: IGetCondition[] = [];  
 
   const options = {
     page: page,
@@ -86,8 +89,35 @@ export const getAllWorkouts = async (req: Request, res: Response): Promise<Respo
     sort: sort,
   };
 
+  conditions.push({ key: 'trainerId', operator: '==', value: trainerId });
+
   try {
-    const result = await getAllPaginatedItems(COLLECTION_WORKOUT, options);
+    const result = await getAllPaginatedItems(COLLECTION_WORKOUT, options, conditions);
+    return handleSuccess(res, result);
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+export const getAllWorkoutsForMember = async (req: Request, res: Response): Promise<Response> => {
+  const page: number = req.query.page ? Number(req.query.page) : 1;
+  const perPage: number = req.query.limit ? Number(req.query.limit) : 10;
+  const sort: string = req.query.sort ? String(req.query.sort) : 'createdAt';
+  const member = getUserInfoByToken(req);
+  const memberId = member.userId;
+  const conditions: IGetCondition[] = [];  
+
+
+  const options = {
+    page: page,
+    limit: perPage,
+    sort: sort,
+  };
+
+  conditions.push({ key: 'memberIds', operator: 'array-contains', value: memberId });
+
+  try {
+    const result = await getAllPaginatedItems(COLLECTION_WORKOUT, options, conditions);
     return handleSuccess(res, result);
   } catch (error) {
     return handleError(res, error);

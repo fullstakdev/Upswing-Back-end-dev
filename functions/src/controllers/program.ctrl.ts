@@ -98,7 +98,7 @@ export const getAllPrograms = async (req: Request, res: Response): Promise<Respo
     } catch (error) {
       return handleError(res, error);
     }
-  };
+};
 
 export const getProgramsByTrainerId = async (req: Request, res: Response): Promise<Response> => {
     const trainerId = req.params.trainerId;
@@ -111,7 +111,7 @@ export const getProgramsByTrainerId = async (req: Request, res: Response): Promi
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const getProgramsByMemberId = async (req: Request, res: Response): Promise<Response> => {
     const memberId = req.params.memberId;
@@ -124,7 +124,7 @@ export const getProgramsByMemberId = async (req: Request, res: Response): Promis
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const getUsersByProgramId = async (req: Request, res: Response): Promise<Response> => {
     const programId = req.params.programId;
@@ -141,7 +141,7 @@ export const getUsersByProgramId = async (req: Request, res: Response): Promise<
     } catch (error) {
         return handleError(res, error);
     }
-}
+};
 
 export const getProgramsByStatus = async (req: Request, res: Response): Promise<Response> => {
 
@@ -150,4 +150,4 @@ export const getProgramsByStatus = async (req: Request, res: Response): Promise<
     } catch (error) {
         return handleError(res, error);
     }
-}
+};

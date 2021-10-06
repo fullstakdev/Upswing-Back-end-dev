@@ -1,6 +1,6 @@
 import { db } from '../.';
-import repository from '../repositories/goal.repo';
-import { COLLECTION_USER } from '../utils/constants';
+import goalRepository from '../repositories/goal.repo';
+import { COLLECTION_PROGRAM, COLLECTION_USER } from '../utils/constants';
 
 interface ISearchUserParams {
     name?: string;
@@ -12,12 +12,18 @@ interface ISearchUserParams {
 
 const createUser = async (userData: any) => {
     const userInfo: any = userData.data;
-    const result = await db.collection(COLLECTION_USER).add(userInfo);
-    if (result && result.id) {
-        userInfo.id = result.id;
-        if (userData.goal) {
-            await repository.createGoals(result.id, userData.goal);
-        }        
+    const userId = 'pPOExQ1m7QeRIdVw9XgCCkxEWeU2';
+    const result: any = await db.collection(COLLECTION_USER).doc(userId).set(userInfo);
+    if (result) {
+        result.id = userId;
+        if (userData.goals) {
+            await goalRepository.createGoals(userId, userData.goals);
+            userInfo.goals = userData.goals;
+        }
+        if (userData.programs) {
+            await addProgramsInUser(userId, userData.programs);
+            userInfo.programs = userData.programs;
+        }
     } 
     return userInfo;
 };
@@ -31,6 +37,17 @@ const updateUser = async (userId: string, userData: any, goalDatas?: any[]) => {
     return true;
 };
 
+const addProgramsInUser = async (userId: string, programsData: any[]) => {
+    const batch = db.batch();
+    programsData.map((program: any) => {
+        const programRef = db.collection(COLLECTION_USER).doc(userId).collection(COLLECTION_PROGRAM).doc();
+        batch.create(programRef, program);
+        return programRef;
+    });
+    const result = await batch.commit();
+    return result;
+};
+
 /**
  * To get only user information from token
  * @param userEmail 
@@ -39,9 +56,15 @@ const updateUser = async (userId: string, userData: any, goalDatas?: any[]) => {
 const getUserInfoByEmail = async (userEmail: any) => {
     const user = await (await db.collection(COLLECTION_USER)
         .where('email', '==', userEmail).get()).docs;
+        
+    const tokenUser: any = {};
+
     if (user && user.length > 0) {
-        console.log(user[0].data());
-        return user[0].data();
+        const doc: any = user[0].data();
+        tokenUser.userId = user[0].id;
+        tokenUser.email = doc.email;
+        tokenUser.roles = doc.roles;
+        return tokenUser;
     }
     return {};
 };
@@ -87,6 +110,7 @@ export default {
     createUser,
     updateUser,
     searchUser,
+    addProgramsInUser,
     getUserInfoByEmail,
     getUsersByProgramId,
     getUsersByMemberIds,

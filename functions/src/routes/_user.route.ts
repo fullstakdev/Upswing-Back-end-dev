@@ -14,6 +14,20 @@ routes.post(
     controller.createUser
 );
 
+routes.post(
+    '/programs',
+    authMiddleware,
+    validator.addProgramsInUser,
+    controller.addProgramsInUser
+);
+
+routes.post(
+    '/goals',
+    authMiddleware,
+    validator.addGoalsInUser,
+    controller.addProgramsInUser
+);
+
 routes.put(
     '/',
     authMiddleware,
@@ -37,23 +51,23 @@ routes.get(
 );
 
 routes.get(
-    '/:userId',
+    '/user',
     authMiddleware,
     validator.getUser,
     controller.getUser
 );
 
 routes.get(
-    '/clients/:trainerId',
+    '/trainer',
     authMiddleware,
-    // validator.getUser,
-    controller.getUser
+    validator.getUsersByTrainerId,
+    controller.getMembersByTrainerId
 );
 
 routes.get(
     '/program/:programId',
     authMiddleware,
-    // validator.getUser,
+    validator.getUsersByProgramId,
     controller.getUsersByProgramId
 );
 

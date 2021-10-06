@@ -100,6 +100,7 @@ export const getAllPaginatedItems = async (
     nextPage = page < totalPages ? page + 1 : page;
     prevPage = page > 1 ? page - 1 : 1;
   }
+  
   return {
     docs: allDocs,
     limit,

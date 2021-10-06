@@ -52,6 +52,11 @@ export const handleValidation = (req: Request, res: Response, next: NextFunction
     }
 };
 
+export const getUserInfoByToken = (req: Request) => {
+    const loggedUser = JSON.parse(String(req.headers.user));
+    return loggedUser;
+}
+
 export const paginationHandler = (paginationData: any[], currentPage: number, perPage: number) => {
     const totalDocs = paginationData.length;
     const totalPages = Math.ceil(totalDocs / perPage);

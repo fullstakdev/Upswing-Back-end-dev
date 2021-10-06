@@ -9,6 +9,7 @@ const createGoals = async (memberId: string, goalData: any[]) => {
     const batch = db.batch();
     goalData.map((goal: any) => {
         const goalRef = db.collection(COLLECTION_USER).doc(memberId).collection(COLLECTION_GOAL).doc();
+        goal.createdAt = new Date().getTime();
         batch.create(goalRef, goal);
         return goalRef;
     });
@@ -16,13 +17,23 @@ const createGoals = async (memberId: string, goalData: any[]) => {
     return result;
 };
 
-const updateGoal = async (data: any) => {
-    const snapData = db.collection(COLLECTION_USER).doc(data.memberId).collection(COLLECTION_GOAL).doc(data.id);
-    const updateData = { name: data.name, status: data.status };
+const updateGoal = async (memberId: string, goalId: string, data: any) => {
+    const snapData = db.collection(COLLECTION_USER).doc(memberId).collection(COLLECTION_GOAL).doc(goalId);
+    const doc = await (await snapData.get()).data();
+    let updateData: any = data;
+    if (doc) {
+        const keys = Object.keys(data);
+        keys.map((key: string) => {
+            doc[key] = data[key];
+        });
+        updateData = doc;
+    }
+    updateData.updateAt = new Date().getTime();
     await snapData.set(updateData).catch((err) => {
-        return err;
+        console.log(err);
+        return null;
     });
-    return true;
+    return updateData;
 };
 
 const getGoals = async (memberId: string) => {

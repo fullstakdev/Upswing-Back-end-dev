@@ -32,7 +32,7 @@ const getAllWorkoutsByProgramId = async (id: string) => {
     return resultData;
 }
 
-const getDurationPlannedWorkout= async (exerciseIds: string[]) => {
+const getDurationPlannedWorkout = async (exerciseIds: string[]) => {
     let sum = 400;
     await exerciseIds.map( async (id) => {
         const exercise = await (await db.collection(COLLECTION_EXERCISE).doc(id).get()).data();
@@ -48,5 +48,5 @@ const getDurationPlannedWorkout= async (exerciseIds: string[]) => {
 export default {
     getAllWorkoutsByIds,
     getAllWorkoutsByProgramId,
-    getDurationPlannedWorkout
+    getDurationPlannedWorkout,
 };

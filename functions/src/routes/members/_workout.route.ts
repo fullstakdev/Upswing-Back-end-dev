@@ -20,7 +20,7 @@ routes.get(
     authMiddleware,
     roleMiddleware(IUserRoleType.MEMBER),
     validator.getWorkouts,
-    controller.getAllWorkouts
+    controller.getAllWorkoutsForMember
 );
 
 routes.post(

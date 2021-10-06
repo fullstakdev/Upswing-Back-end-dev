@@ -90,8 +90,16 @@ export const getAllExercises = async (req: Request, res: Response): Promise<Resp
   }
 };
 
+export const getAllExercisesByWorkoutId = async (req: Request, res: Response): Promise<Response> => {
+
+  try {
+    return handleSuccess(res, {});
+  } catch (error) {
+    return handleError(res, error);
+  }
+}
 export const searchExercises = async (req: Request, res: Response): Promise<Response> => {
-  const searchData = req.body;  
+  const searchData = req.body;
   try {
     const searchResult = await repository.searchExercise(searchData);
     const perPage = searchData.perPage ? searchData.perPage : 10;

@@ -23,7 +23,7 @@ routes.put(
 );
 
 routes.delete(
-    '/:memberId/:goalId',
+    '/:goalId',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getGoal,
@@ -31,7 +31,7 @@ routes.delete(
 );
 
 routes.get(
-    '/:memberId/:goalId',
+    '/member/:goalId',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getGoal,
@@ -39,11 +39,18 @@ routes.get(
 );
 
 routes.get(
-    '/:memberId',
+    '/',
     authMiddleware,
     // roleMiddleware(IUserRoleType.TRAINER),
     // validator.getGoal,
     controller.getAllGoals
 );
+
+routes.get(
+    '/complete/:goalId',
+    authMiddleware,
+    controller.setComplete
+)
+
 
 export default routes;
